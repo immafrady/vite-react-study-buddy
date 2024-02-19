@@ -1,19 +1,21 @@
 import { createTheme } from '@mui/material/styles';
 import { red } from '@mui/material/colors';
+import { useTheme } from '@mui/material';
 
 // A custom theme for this app
-const theme = createTheme({
+const darkTheme = createTheme({
   palette: {
-    primary: {
-      main: '#556cd6',
-    },
-    secondary: {
-      main: '#19857b',
-    },
-    error: {
-      main: red.A400,
-    },
-  },
-});
+    mode: 'dark'
+  }
+})
 
-export default theme;
+const lightTheme = createTheme({
+  palette: {
+    mode: 'light'
+  }
+})
+
+export default {
+  light: lightTheme,
+  dark: darkTheme
+};
