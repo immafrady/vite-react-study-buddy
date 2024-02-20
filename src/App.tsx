@@ -1,13 +1,21 @@
 import * as React from 'react';
-import Container from '@mui/material/Container';
-import Box from '@mui/material/Box';
+import { RouterProvider } from 'react-router-dom';
+import router from './router';
+import { CssBaseline, ThemeProvider } from '@mui/material';
+import { ColorModeContext, useThemeSwitcher } from '@/hooks/use-theme-switcher';
 
 export default function App() {
+  // themes
+  const { theme, contextValue} = useThemeSwitcher()
   return (
-    <Container maxWidth="sm">
-      <Box sx={{ my: 4 }}>
-          你好世界
-      </Box>
-    </Container>
+    <>
+      <ColorModeContext.Provider value={contextValue}>
+        <ThemeProvider theme={theme}>
+          <CssBaseline />
+          <RouterProvider router={router}/>
+        </ThemeProvider>
+      </ColorModeContext.Provider>
+
+    </>
   );
 }
