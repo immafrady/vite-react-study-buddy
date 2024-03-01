@@ -6,7 +6,7 @@ import { ThemeSwitch } from '@/hooks/use-theme-switcher';
 const Layout = () => {
     // meta
     const matches = useMatches();
-    let bestMatch = matches.at(-1);
+    let bestMatch = matches[matches.length - 1];
 
     // theme switcher
     return <Box sx={{ flexGrow: 1 }}>
