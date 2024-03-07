@@ -14,6 +14,16 @@ export class Index implements IRecord {
   ) {
   }
 
+  toDBJson(): IRecord {
+    return {
+      id: this.id,
+      classifyId: this.classifyId,
+      questionIds: this.questionIds,
+      wrongQuestionIds: this.wrongQuestionIds,
+      updateDate: this.updateDate,
+    }
+  }
+
   loadQuestions() {
     // todo 加载问题
   }

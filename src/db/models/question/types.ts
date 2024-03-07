@@ -1,9 +1,9 @@
 export interface IQuestion {
   id: number
   classifyId: number
-  q: string
-  a: string
-  detail: any
+  problem: string // 题干
+  answer: string // 答案
+  options: any //
   like: boolean
   count: number
   wrongCount: number
