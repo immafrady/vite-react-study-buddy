@@ -1,7 +1,7 @@
 import { IQuestion } from '@/db/models/question/types';
 import { IRecord } from './types';
 
-export class Index implements IRecord {
+export class Record implements IRecord {
   questions: IQuestion[] = []
   wrongQuestions: IQuestion[] = []
 
