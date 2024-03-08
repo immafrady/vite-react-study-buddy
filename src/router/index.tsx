@@ -1,12 +1,17 @@
 import { createHashRouter } from 'react-router-dom';
 import Layout from '@/layout';
 import Home from '@/pages/home';
+import ExamConfig from '@/pages/exam-config'
+import { RouterName } from '@/router/types'
 
 const router = createHashRouter([{
     element: <Layout />,
     children: [{
-        path: '/',
+        path: RouterName.Home,
         element: <Home />
+    }, {
+        path: RouterName.ExamConfig,
+        element: <ExamConfig />
     }]
 }])
 export default router;
