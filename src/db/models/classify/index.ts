@@ -1,4 +1,4 @@
-import { IQuestion } from '@/db/models/question/types';
+import { IQuestion, QuestionType } from '@/db/models/question/types'
 import { ClassName, IClassify } from './types';
 
 export class Classify implements IClassify {
@@ -6,13 +6,15 @@ export class Classify implements IClassify {
   questions: IQuestion[] = []
 
   constructor(
-    public name: ClassName
+    public name: ClassName,
+    public questionTypes: QuestionType[],
   ) {}
 
   toDBJson(): IClassify {
     return {
       id: this.id,
       name: this.name,
+      questionTypes: this.questionTypes,
     }
   }
 

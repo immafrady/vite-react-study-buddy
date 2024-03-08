@@ -16,6 +16,5 @@ export class AppDatabase extends Dexie {
       questions: '++id, classifyId, problem, like, count, wrongCount, type',
       records: '++id, classifyId, *questionIds, *wrongQuestionIds'
     })
-    this.open()
   }
 }

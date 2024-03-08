@@ -23,10 +23,6 @@ async function loadJson<T>(type: string): Promise<T[]> {
   return await resp.json() as T[]
 }
 
-export const loadJudgeQuestions = () => loadJson<JudgeQuestion>('judge')
-export const loadSingleQuestions = () => loadJson<SelectQuestion>('single')
-export const loadMultipleQuestions = () => loadJson<SelectQuestion>('multiple')
-
 const selectQuestionParser = (source: SelectQuestion) => {
   return {
     A: source.A,
@@ -40,7 +36,7 @@ const selectQuestionParser = (source: SelectQuestion) => {
 export const loadMarxData = async (db: AppDatabase) => {
   const marx = await db.classifies.where({ name: ClassName.Marx }).first()
   if (!marx) {
-    const classify = new Classify(ClassName.Marx)
+    const classify = new Classify(ClassName.Marx, [QuestionType.Judge, QuestionType.Single, QuestionType.Multiple])
     const classifyId = await db.classifies.add(classify.toDBJson())
 
     const [judges, singles, multiples] = await Promise.all([
@@ -55,7 +51,7 @@ export const loadMarxData = async (db: AppDatabase) => {
         judge.problem,
         judge.answer,
         null,
-        QuestionType.JUDGE
+        QuestionType.Judge
         ).toDBJson()))
       db.questions.bulkAdd(singles.map((single) => new Question(
         classifyId,

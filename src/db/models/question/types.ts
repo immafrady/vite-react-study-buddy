@@ -11,7 +11,7 @@ export interface IQuestion {
 }
 
 export enum QuestionType {
-  Multiple = 'MULTIPLE',
-  Single = 'SINGLE',
-  JUDGE = 'Judge'
+  Multiple = '多选题',
+  Single = '单选题',
+  Judge = '判断题'
 }

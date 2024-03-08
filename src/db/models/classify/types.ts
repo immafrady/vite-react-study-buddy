@@ -1,6 +1,9 @@
+import { QuestionType } from '@/db/models/question/types'
+
 export interface IClassify {
   id: number
   name: ClassName
+  questionTypes: QuestionType[]
 }
 
 export enum ClassName {
