@@ -1,6 +1,7 @@
 import { AppDatabase } from '@/db'
-import React, { useState } from 'react'
 import { loadMarxData } from '@/services/subjects/marx/load-data'
+import { create } from 'zustand'
+import { combine } from 'zustand/middleware'
 
 export enum InitState {
   BeforeInit,
@@ -8,35 +9,40 @@ export enum InitState {
   Initialized,
 }
 let db: AppDatabase = new AppDatabase()
-let storedInitState: InitState = InitState.BeforeInit // 初始化状态
-let lock = false
 
-export const useDatabase = () => {
-  const [initState, setInitState] = useState<InitState>(storedInitState)
+export const useDatabase = create<{
+  db: AppDatabase
+  initState: InitState
+  setInitState: (initState: InitState) => void
+}>(
+  combine(
+    {
+      db,
+      initState: InitState.BeforeInit
+    },
+    set => ({
+      setInitState: (initState: InitState) => {
+        set({ initState: initState })
+      }
+    })
+  )
+)
 
-  React.useEffect(() => {
-    if (initState === InitState.BeforeInit && !lock) {
-      lock = true // 防止重复调用
-      setInitState(InitState.Initializing)
+;(async () => {
+  const state = useDatabase.getState()
+  if (state.initState === InitState.BeforeInit) {
+    useDatabase.setState({ initState: InitState.Initializing })
 
-      ;(async () => {
-        // 初始化过程
-        try {
-          if (!db.isOpen()) {
-            await db.open()
-          }
-          await loadMarxData(db)
-
-          setInitState(InitState.Initialized)
-        } catch (e) {
-        }
-        lock = false // 释放锁
-      })()
+    try {
+      if (!state.db.isOpen()) {
+        await state.db.open()
+      }
+      // 初始化数据库代码！
+      await loadMarxData(state.db)
+      useDatabase.setState({ initState: InitState.Initialized })
+    } catch (e) {
+      console.error(e)
+      useDatabase.setState({ initState: InitState.BeforeInit })
     }
-  }, [])
-
-  return {
-    db,
-    initState,
   }
-}
+})()
