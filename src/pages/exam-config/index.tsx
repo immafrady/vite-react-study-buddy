@@ -37,10 +37,10 @@ const ExamConfig = () => {
 
   const onCountChange = (event: any, value: any) => setForm({ ...form, count: value as string })
 
-  return <Paper sx={{ p: { xs: 1, sm: 2, md: 3, lg: 4, xl: 5 }}}>
+  return <Paper sx={{ p: { xs: 1, sm: 2, md: 3, lg: 4, xl: 5 }, minWidth: 'sm' }}>
     <Typography variant={'h5'}>{ location.state?.modeName }</Typography>
     <Typography variant={'body2'}>{ location.state?.modeExplain }</Typography>
-    <Divider sx={{ marginTop: { xs: 1, sm: 2, md: 3, lg: 4, xl: 5 }, marginBottom: { xs: 2, sm: 3, md: 4, lg: 5, xl: 6 } }}/>
+    <Divider sx={{ marginTop: { xs: 1, sm: 2, md: 3, lg: 4, xl: 5 }, marginBottom: { xs: 4, sm: 5, md: 6, lg: 7, xl: 8 } }}/>
     <Container maxWidth={'sm'}>
       <Stack spacing={2}>
 

@@ -9,7 +9,7 @@ const Layout = () => {
     let bestMatch = matches[matches.length - 1];
 
     // theme switcher
-    return <Box sx={{ flexGrow: 1 }}>
+    return <Box>
         <AppBar component={'nav'} position={'static'}>
             <Toolbar>
                 <Typography
