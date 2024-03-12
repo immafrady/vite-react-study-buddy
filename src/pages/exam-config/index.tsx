@@ -1,4 +1,4 @@
-import { useLocation, Location } from 'react-router-dom'
+import { useLocation, Location, useNavigate } from 'react-router-dom'
 import {
   Autocomplete,
   Button,
@@ -21,14 +21,17 @@ import { useDatabase } from '@/stores/use-database'
 import { useLiveQuery } from 'dexie-react-hooks'
 import Box from '@mui/material/Box'
 import { QuestionType } from '@/db/models/question/types'
+import { RouterName } from '@/router/types'
+import { IExamHolderConfig } from '@/services/exam-holder'
 
 const ExamConfig = () => {
+  const navigate = useNavigate()
   const location: Location<ExamConfigState> = useLocation()
   const { db, initState } = useDatabase()
   const classifies = useLiveQuery(() => {
     return db.classifies.toArray()
   })
-  const [form, setForm] = React.useState<{ classifyId: string | number; types: QuestionType[]; count: string }>({
+  const [form, setForm] = React.useState<{ classifyId: string; types: QuestionType[]; count: string }>({
     classifyId: '',
     types: [],
     count: '',
@@ -52,7 +55,7 @@ const ExamConfig = () => {
             label={'请选择题目类别'}
             onChange={event => {
               const classifyId = event.target.value as number
-              setForm({ ...form, classifyId: classifyId, types: [] })
+              setForm({ ...form, classifyId: classifyId + '', types: [] })
               const target = classifies?.find(item => item.id === classifyId)
               setTypeOptions(target?.questionTypes || [])
             }}
@@ -91,7 +94,15 @@ const ExamConfig = () => {
           renderInput={(params) => <TextField {...params} type={'number'} label={'请选择做题数量'} />}
         />
 
-        <Button disabled={!(form.classifyId && form.types.length && form.count)}>下一步</Button>
+        <Button disabled={!(form.classifyId && form.types.length && form.count)} onClick={() => {
+          navigate(RouterName.AnswerSheet, {
+            state: {
+              classifyId: +form.classifyId,
+              types: form.types,
+              count: +form.count,
+            } as IExamHolderConfig
+          })
+        }}>下一步</Button>
       </Stack>
     </Container>
   </Paper>
