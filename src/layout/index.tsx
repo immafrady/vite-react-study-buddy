@@ -10,7 +10,7 @@ const Layout = () => {
 
     // theme switcher
     return <Box>
-        <AppBar component={'nav'} position={'static'}>
+        <AppBar component={'nav'} >
             <Toolbar>
                 <Typography
                   variant="h6"
@@ -22,8 +22,12 @@ const Layout = () => {
                 <ThemeSwitch />
             </Toolbar>
         </AppBar>
-        <Box component={'main'} sx={{p: { xs: 1, sm: 2, md: 3, lg: 4, xl: 5 }}}>
-            <Outlet />
+        <Box component={'main'} sx={{
+            p: { xs: 1, sm: 2, md: 3, lg: 4, xl: 5 },
+        }}>
+            <Box sx={{ width: '100%', height: '100vh', position: 'relative' }}>
+                <Outlet />
+            </Box>
         </Box>
     </Box>;
 };
