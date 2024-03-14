@@ -53,7 +53,7 @@ const Home = () => {
           y: 370,
         }
       }
-      ].map(item => <Grid item xs={24} md={6} sm={12}>
+      ].map((item, idx) => <Grid key={idx} item xs={24} md={6} sm={12}>
           <Card
             elevation={3}
             sx={{ display: 'flex' }}
