@@ -22,7 +22,7 @@ import { useLiveQuery } from 'dexie-react-hooks'
 import Box from '@mui/material/Box'
 import { QuestionType } from '@/db/models/question/types'
 import { RouterName } from '@/router/types'
-import { IExamHolderConfig } from '@/services/exam-holder'
+import { IAnswerSheetControllerConfig } from '@/pages/answer-sheet/controller'
 
 const ExamConfig = () => {
   const navigate = useNavigate()
@@ -67,12 +67,12 @@ const ExamConfig = () => {
         { form.classifyId && <Box>
           <InputLabel>请选择答题类型</InputLabel>
           <FormGroup>
-            { typeOptions?.map((item) => <FormControlLabel
+            { typeOptions?.map((item, idx) => <FormControlLabel
+              key={idx}
               control={
               <Checkbox
                 checked={form.types.includes(item)}
                 onChange={(event) => {
-                  console.log(event.target.checked)
                   if (event.target.checked) {
                     setForm({ ...form, types: [...form.types, item]})
                   } else {
@@ -100,7 +100,7 @@ const ExamConfig = () => {
               classifyId: +form.classifyId,
               types: form.types,
               count: +form.count,
-            } as IExamHolderConfig
+            } as IAnswerSheetControllerConfig
           })
         }}>下一步</Button>
       </Stack>
