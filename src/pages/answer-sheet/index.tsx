@@ -2,7 +2,7 @@ import {
   Collapse,
   Stack,
 } from '@mui/material'
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { useLocation, Location, useNavigate } from 'react-router-dom'
 import { TransitionGroup } from 'react-transition-group'
 import StartCard from '@/pages/answer-sheet/cards/StartCard'
@@ -11,6 +11,7 @@ import Box from '@mui/material/Box'
 import { RouterName } from '@/router/types'
 import { AnswerSheetController, IAnswerSheetControllerConfig } from '@/pages/answer-sheet/controller'
 import AnswerSheetProvider from '@/pages/answer-sheet/context'
+import { useMounted } from '@/hooks/use-mounted'
 
 /**
  *
@@ -19,34 +20,29 @@ import AnswerSheetProvider from '@/pages/answer-sheet/context'
 const AnswerSheet = () => {
   const location: Location<IAnswerSheetControllerConfig> = useLocation();
   const navigate = useNavigate()
-  const [controller, setController] = useState<AnswerSheetController|undefined>()
+  const [controller, setController] = React.useState<AnswerSheetController|undefined>()
 
-  let init = false
-  useEffect(() => {
-    if (!init) {
-      if (location.state) {
-        ;(async () => {
-          setController(await AnswerSheetController.fromConfig(location.state))
-        })()
-      } else {
-        navigate(RouterName.Home)
-      }
+  useMounted(async () => {
+    if (location.state) {
+      const controller = await AnswerSheetController.fromConfig(location.state)
+      setController(controller)
+    } else {
+      navigate(RouterName.Home)
     }
-    return () => { init = true }
-  }, [])
+  })
 
-  const [list, setList] = React.useState<React.ReactElement<CommonCard>[]>([
-    <StartCard onNext={() => {
-      controller?.loadQuestions()
-      addItem()
-    }}/>
+  const onNext = () => {
+    addItem()
+  }
+
+  const [list, setList] = React.useState<React.FC<CommonCard>[]>([
+    StartCard
   ])
 
 
   const addItem = () => {
-    setList(list => [<StartCard onNext={() => addItem()}/>, ...list])
+    setList(list => [StartCard, ...list])
   }
-
   return <AnswerSheetProvider value={controller}>
     <Box sx={{ position: 'relative', height: '100%', overflowY: 'visible', overflowX: 'visible' }}>
       <Stack spacing={2} justifyContent={'flex-end'} sx={{
@@ -68,10 +64,11 @@ const AnswerSheet = () => {
       }}>
         <TransitionGroup component={null}>
           { list.map((component, idx) => <Collapse key={idx}>
-            { React.cloneElement(component, {
+            { React.createElement(component, {
               key: idx,
               elevation: 5,
-              inactive: idx !== list.length - 1
+              inactive: idx !== list.length - 1,
+              onNext,
             }) }
           </Collapse>) }
         </TransitionGroup>

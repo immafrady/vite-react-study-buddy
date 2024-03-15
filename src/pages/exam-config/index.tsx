@@ -87,7 +87,7 @@ const ExamConfig = () => {
 
         <Autocomplete
           value={form.count}
-          options={['10', '20', '50', '100']}
+          options={['10', '25', '50', '100']}
           freeSolo
           onChange={onCountChange}
           onInputChange={onCountChange}

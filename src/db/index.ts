@@ -16,7 +16,7 @@ export class AppDatabase extends Dexie {
 
     this.version(1).stores({
       classifies: '++id, name',
-      questions: '++id, classifyId, problem, like, count, wrongCount, type, [classifyId+type]',
+      questions: '++id, classifyId, problem, like, type, [classifyId+type]',
       records: '++id, classifyId, *questionIds, *wrongQuestionIds'
     })
     this.records.mapToClass(Record)
