@@ -9,6 +9,9 @@ export class ReviewExam implements ExamController {
     private recordId: number,
   ) {}
 
+  readonly showInfo: boolean = true
+  readonly showAnswer: boolean = true
+
   private db: AppDatabase = useDatabase.getState().db
   record!: IRecord
   questions: IQuestion[] = []

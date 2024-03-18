@@ -1,7 +1,4 @@
-import {
-  Collapse,
-  Stack,
-} from '@mui/material'
+import { Collapse, Stack } from '@mui/material'
 import React from 'react'
 import { useLocation, Location, useNavigate } from 'react-router-dom'
 import { TransitionGroup } from 'react-transition-group'
@@ -33,17 +30,14 @@ const AnswerSheet = () => {
   })
 
   const onNext = () => {
-    addItem()
+    setList(list => [StartCard, ...list])
   }
 
+  const [index, setIndex] = React.useState(0)
   const [list, setList] = React.useState<React.FC<CommonCard>[]>([
     StartCard
   ])
 
-
-  const addItem = () => {
-    setList(list => [StartCard, ...list])
-  }
   return <AnswerSheetProvider value={controller}>
     <Box sx={{ position: 'relative', height: '100%', overflowY: 'visible', overflowX: 'visible' }}>
       <Stack spacing={2} justifyContent={'flex-end'} sx={{

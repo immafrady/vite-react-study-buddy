@@ -9,6 +9,9 @@ export class AnswerSheetController {
 
   private db!: AppDatabase
   private examController!: ExamController // 从fromConfig来的会有examController？
+  get showInfo() { return this.examController.showInfo }
+  get showAnswer() { return this.examController.showAnswer }
+  get questions() { return this.examController.questions }
 
   private isStarted = false
   async start() {

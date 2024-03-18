@@ -10,6 +10,11 @@ export enum ExamType {
 export interface ExamController {
   record: IRecord
   questions: IQuestion[]
+  // 特定的配置
+  showInfo: boolean // 展示题目相关信息
+  showAnswer: boolean // 展示答案
+
+  // 加载考题
   newRecord(): Promise<void>
   // 抽取考题
   loadQuestions(): Promise<void>

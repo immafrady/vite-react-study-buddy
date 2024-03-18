@@ -1,4 +1,5 @@
 import { IQuestion, QuestionType } from './types';
+import { useDatabase } from '@/stores/use-database'
 
 export class Question implements IQuestion {
     id!: number
@@ -25,6 +26,11 @@ export class Question implements IQuestion {
             options: this.options,
             type: this.type,
         }
+    }
+
+    toggleLike() {
+        this.like = !this.like
+        useDatabase.getState().db.questions.update(this.id, { like: this.like})
     }
 }
 

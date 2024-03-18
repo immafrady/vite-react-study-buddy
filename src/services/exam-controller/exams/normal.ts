@@ -15,6 +15,9 @@ export class NormalExam implements ExamController {
   ) {
   }
 
+  readonly showInfo: boolean = true
+  readonly showAnswer: boolean = true
+
   private db: AppDatabase = useDatabase.getState().db
   record!: IRecord
   questions: IQuestion[] = []
