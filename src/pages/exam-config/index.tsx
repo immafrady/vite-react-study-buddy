@@ -1,4 +1,4 @@
-import { useLocation, Location, useNavigate } from 'react-router-dom'
+import { Location, useLocation, useNavigate } from 'react-router-dom'
 import {
   Autocomplete,
   Button,
@@ -12,7 +12,8 @@ import {
   MenuItem,
   Paper,
   Select,
-  Stack, TextField,
+  Stack,
+  TextField,
   Typography,
 } from '@mui/material'
 import { ExamConfigState } from '@/pages/exam-config/types'
@@ -22,7 +23,8 @@ import { useLiveQuery } from 'dexie-react-hooks'
 import Box from '@mui/material/Box'
 import { QuestionType } from '@/db/models/question/types'
 import { RouterName } from '@/router/types'
-import { IAnswerSheetControllerConfig } from '@/pages/answer-sheet/controller'
+import { ExamControllerConfig } from '@/services/exam-controller'
+import { ExamType } from '@/services/exam-controller/types'
 
 const ExamConfig = () => {
   const navigate = useNavigate()
@@ -100,7 +102,8 @@ const ExamConfig = () => {
               classifyId: +form.classifyId,
               types: form.types,
               count: +form.count,
-            } as IAnswerSheetControllerConfig
+              type: ExamType.Normal
+            } as ExamControllerConfig
           })
         }}>下一步</Button>
       </Stack>

@@ -9,22 +9,23 @@ import StartCard from '@/pages/answer-sheet/cards/StartCard'
 import { CommonCard } from '@/pages/answer-sheet/cards/types'
 import Box from '@mui/material/Box'
 import { RouterName } from '@/router/types'
-import { AnswerSheetController, IAnswerSheetControllerConfig } from '@/pages/answer-sheet/controller'
+import { AnswerSheetController } from '@/pages/answer-sheet/controller'
 import AnswerSheetProvider from '@/pages/answer-sheet/context'
 import { useMounted } from '@/hooks/use-mounted'
+import { ExamControllerConfig } from '@/services/exam-controller'
 
 /**
  *
  * todo start之后，end之前，window.unload要加拦截
  */
 const AnswerSheet = () => {
-  const location: Location<IAnswerSheetControllerConfig> = useLocation();
+  const location: Location<ExamControllerConfig> = useLocation();
   const navigate = useNavigate()
   const [controller, setController] = React.useState<AnswerSheetController|undefined>()
 
   useMounted(async () => {
     if (location.state) {
-      const controller = await AnswerSheetController.fromConfig(location.state)
+      const controller = new AnswerSheetController(location.state)
       setController(controller)
     } else {
       navigate(RouterName.Home)

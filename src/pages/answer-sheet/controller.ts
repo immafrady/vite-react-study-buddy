@@ -1,45 +1,23 @@
-import { QuestionType } from '@/db/models/question/types'
-import { IRecord } from '@/db/models/record/types'
-import { useDatabase } from '@/stores/use-database'
-import { Record } from '@/db/models/record'
 import { AppDatabase } from '@/db'
-
-export interface IAnswerSheetControllerConfig {
-  classifyId: number
-  types: QuestionType[]
-  count: number
-}
+import { ExamController } from '@/services/exam-controller/types'
+import { ExamControllerConfig, genExamController } from '@/services/exam-controller'
 
 export class AnswerSheetController {
-  private constructor() {}
+  constructor(config: ExamControllerConfig) {
+    this.examController = genExamController(config)
+  }
 
   private db!: AppDatabase
-  public record!: IRecord
+  private examController!: ExamController // 从fromConfig来的会有examController？
 
-  // 从已有记录new
-  static async fromRecord(recordId: number) {
-    const controller = new AnswerSheetController()
-    controller.db = useDatabase.getState().db
-    controller.record = (await controller.db.records.get(recordId))!
-    return controller
-  }
-
-  // 从配置new
-  static async fromConfig(config: IAnswerSheetControllerConfig ) {
-    const controller = new AnswerSheetController()
-    controller.db = useDatabase.getState().db
-    controller.record = new Record(config.classifyId, [], [], new Date())
-    return controller
-  }
-
+  private isStarted = false
   async start() {
-    if (!this.record.id) {
-      this.record.id = await this.db.records.add(this.record)
+    if (!this.isStarted) {
+      this.isStarted = true
+      await this.examController.newRecord()
+      await this.examController.loadQuestions()
+      console.log(this.examController.questions)
     }
-  }
-
-  loadQuestions() {
-
   }
 
 }

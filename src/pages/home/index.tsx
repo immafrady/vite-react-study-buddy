@@ -1,8 +1,9 @@
-import { Button, Card, CardActions, CardContent, CardHeader, CardMedia, Grid, Typography } from '@mui/material';
-import Box from '@mui/material/Box';
+import { Button, Card, CardActions, CardContent, CardHeader, CardMedia, Grid, Typography } from '@mui/material'
+import Box from '@mui/material/Box'
 import { useNavigate } from 'react-router-dom'
 import { RouterName } from '@/router/types'
 import { ExamConfigState } from '@/pages/exam-config/types'
+import { ExamType } from '@/services/exam-controller/types'
 
 const Home = () => {
   const navigate = useNavigate()
@@ -14,7 +15,8 @@ const Home = () => {
           navigate(RouterName.ExamConfig, {
             state: {
               modeName: '普通模式',
-              modeExplain: '选择参数后开始刷题'
+              modeExplain: '选择参数后开始刷题',
+              type: ExamType.Normal,
             } as ExamConfigState
           })
         },

@@ -1,4 +1,5 @@
-import { Question } from '@/db/models/question'
+import { IRecord } from '@/db/models/record/types'
+import { IQuestion } from '@/db/models/question/types'
 
 export enum ExamType {
   Normal, // 普通模式
@@ -7,6 +8,9 @@ export enum ExamType {
 }
 
 export interface ExamController {
+  record: IRecord
+  questions: IQuestion[]
+  newRecord(): Promise<void>
   // 抽取考题
-  picker(questions: Question[], count: number): Question[]
+  loadQuestions(): Promise<void>
 }
