@@ -10,7 +10,7 @@ import { AnswerSheetController } from '@/pages/answer-sheet/controller'
 import AnswerSheetProvider from '@/pages/answer-sheet/context'
 import { useMounted } from '@/hooks/use-mounted'
 import { ExamControllerConfig } from '@/services/exam-controller'
-import SelectQuizCard from '@/pages/answer-sheet/cards/SelectQuizCard'
+import SelectQuizCard from '@/pages/answer-sheet/cards/SelectQuizCard/index'
 
 /**
  *
