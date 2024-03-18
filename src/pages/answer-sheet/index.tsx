@@ -69,7 +69,7 @@ const AnswerSheet = () => {
             { React.createElement(component, {
               key: idx,
               idx,
-              elevation: 5,
+              elevation: 3,
               onNext,
             }) }
           </Collapse>) }
