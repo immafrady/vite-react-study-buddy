@@ -1,5 +1,5 @@
 import { Collapse, Stack } from '@mui/material'
-import React from 'react'
+import React, { useMemo } from 'react'
 import { useLocation, Location, useNavigate } from 'react-router-dom'
 import { TransitionGroup } from 'react-transition-group'
 import StartCard from '@/pages/answer-sheet/cards/StartCard'
@@ -45,13 +45,38 @@ const AnswerSheet = () => {
     StartCard
   ])
 
+  const stackRef = React.useRef<HTMLDivElement>(null)
+  const [tY, setTy] = React.useState<number>(0)
+  React.useEffect(() => {
+    const ro = new ResizeObserver(entries => {
+      if (stackRef.current) {
+        const children = stackRef.current.children
+        setTy(children[children.length - 1].clientHeight / 2)
+        console.log('trigger!')
+      }
+    })
+    stackRef.current && ro.observe(stackRef.current)
+
+    return () => {
+      stackRef.current && ro.unobserve(stackRef.current)
+    }
+  }, [])
+  // const tY = useMemo(() => {
+  //   if (stackRef.current) {
+  //     const children = stackRef.current.children
+  //     return children[children.length - 1].clientHeight / 2
+  //   } else {
+  //     return 0
+  //   }
+  // }, [stackRef])
+
   return <AnswerSheetProvider value={controller}>
     <Box sx={{ position: 'relative', height: '100%', overflowY: 'visible', overflowX: 'visible' }}>
-      <Stack spacing={2} justifyContent={'flex-end'} sx={{
+      <Stack ref={stackRef} spacing={2} justifyContent={'flex-end'} sx={{
         position: 'absolute',
         width: '100%',
-        mb: '40vh',
-        bottom: 0,
+        bottom: '50%',
+        transform: `translateY(${tY}px)`,
         '&::after': {
           display: 'block',
           content: '""',
