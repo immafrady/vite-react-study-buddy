@@ -1,6 +1,8 @@
 import { IQuestion, QuestionType } from './types';
 import { useDatabase } from '@/stores/use-database'
 
+const db = useDatabase.getState().db
+
 export class Question implements IQuestion {
     id!: number
     like: boolean = false
@@ -28,9 +30,22 @@ export class Question implements IQuestion {
         }
     }
 
+    /**
+     * 切换是否喜欢
+     */
     toggleLike() {
         this.like = !this.like
-        useDatabase.getState().db.questions.update(this.id, { like: this.like})
+        db.questions.update(this.id, { like: this.like})
+    }
+
+    /**
+     * 登记做过
+     * @param isWrong
+     */
+    markDone(isWrong: boolean) {
+        if (isWrong) { this.wrongCount++ }
+        this.count++
+        db.questions.update(this.id, { wrongCount: this.wrongCount, count: this.count })
     }
 }
 
