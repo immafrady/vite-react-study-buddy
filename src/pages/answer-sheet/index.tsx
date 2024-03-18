@@ -10,6 +10,7 @@ import { AnswerSheetController } from '@/pages/answer-sheet/controller'
 import AnswerSheetProvider from '@/pages/answer-sheet/context'
 import { useMounted } from '@/hooks/use-mounted'
 import { ExamControllerConfig } from '@/services/exam-controller'
+import SelectQuizCard from '@/pages/answer-sheet/cards/SelectQuizCard'
 
 /**
  *
@@ -30,10 +31,16 @@ const AnswerSheet = () => {
   })
 
   const onNext = () => {
-    setList(list => [StartCard, ...list])
+    if (controller) {
+      if (controller.questions.length > list.length + 1) {
+        setList(list => [...list, SelectQuizCard])
+      } else {
+        // todo 结束
+      }
+    }
+    // setList(list => [StartCard, ...list])
   }
 
-  const [index, setIndex] = React.useState(0)
   const [list, setList] = React.useState<React.FC<CommonCard>[]>([
     StartCard
   ])
@@ -61,8 +68,8 @@ const AnswerSheet = () => {
           { list.map((component, idx) => <Collapse key={idx}>
             { React.createElement(component, {
               key: idx,
+              idx,
               elevation: 5,
-              inactive: idx !== list.length - 1,
               onNext,
             }) }
           </Collapse>) }
