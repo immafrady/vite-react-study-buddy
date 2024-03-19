@@ -11,6 +11,7 @@ import AnswerSheetProvider from '@/pages/answer-sheet/context'
 import { useMounted } from '@/hooks/use-mounted'
 import { ExamControllerConfig } from '@/services/exam-controller'
 import SelectQuizCard from '@/pages/answer-sheet/cards/SelectQuizCard/index'
+import ResultCard from '@/pages/answer-sheet/cards/ResultCard'
 
 /**
  *
@@ -38,10 +39,10 @@ const AnswerSheet = () => {
     if (controller) {
       if (controller.questions.length + 1> list.length) {
         setList(list => [...list, SelectQuizCard])
-        setIndex(index => index + 1)
       } else {
-        // todo 结束
+        setList(list => [...list, ResultCard])
       }
+      setIndex(index => index + 1)
     }
   }
 

@@ -14,6 +14,11 @@ export class AnswerSheetController {
   get showInfo() { return this.examController.showInfo }
   get showAnswer() { return this.examController.showAnswer }
   get questions() { return this.examController.questions }
+  get score() {
+    const doneCount = this.examController.record.questionIds.length
+    const rightCount = doneCount - this.examController.record.wrongQuestionIds.length
+    return Math.floor(rightCount / doneCount * 100)
+  }
 
   private isStarted = false
   async start() {
@@ -21,7 +26,6 @@ export class AnswerSheetController {
       this.isStarted = true
       await this.examController.newRecord()
       await this.examController.loadQuestions()
-      console.log(this.examController.questions)
     }
   }
 
