@@ -44,7 +44,7 @@ const SelectQuizCard: React.FC<CommonCard> = ({ idx, onNext, ...cardProps }) => 
     }
   }, [controller?.showAnswer, value, question?.answer, state])
 
-  return <Card {...cardProps} sx={{ border: '2px solid transparent', borderColor: cardConfig.borderColor }}>
+  return <Card {...cardProps} sx={{ borderBottom: '2px solid transparent', borderColor: cardConfig.borderColor }}>
       <CardContent>
         <Typography variant={'body2'} color={'text.secondary'}>({idx}/{controller?.questions.length} {question?.type})</Typography>
         <Typography variant={'body1'} color={'text.primary'} gutterBottom textAlign={'justify'}>{ question?.problem }</Typography>
