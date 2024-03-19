@@ -50,24 +50,26 @@ const AnswerSheet = () => {
 
   React.useEffect(() => {
     const ro = new ResizeObserver(entries => {
-      if (stackRef.current) {
-        const children = stackRef.current.children
-        let height = 0
-        let isFirst = true
-        for (let i = index; i < children.length; i++) {
-          const offsetHeight = (children[i] as HTMLDivElement).offsetHeight
-          if (isFirst) { // 第一个要减半
-            isFirst = false
-            height += offsetHeight / 2
-          } else {
-            height += offsetHeight + parseFloat(getComputedStyle(children[i]).marginTop)
+      requestAnimationFrame(() => {
+        if (stackRef.current) {
+          const children = stackRef.current.children
+          let height = 0
+          let isFirst = true
+          for (let i = index; i < children.length; i++) {
+            const offsetHeight = (children[i] as HTMLDivElement).offsetHeight
+            if (isFirst) { // 第一个要减半
+              isFirst = false
+              height += offsetHeight / 2
+            } else {
+              height += offsetHeight + parseFloat(getComputedStyle(children[i]).marginTop)
+            }
           }
+          setTy(height)
         }
-        setTy(height)
-      }
+      })
     })
-    stackRef.current && ro.observe(stackRef.current)
 
+    stackRef.current && ro.observe(stackRef.current)
     return () => {
       stackRef.current && ro.unobserve(stackRef.current)
     }
