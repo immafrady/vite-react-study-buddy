@@ -3,6 +3,7 @@ import { ClassName } from '@/db/models/classify/types'
 import { Classify } from '@/db/models/classify'
 import { Question } from '@/db/models/question'
 import { QuestionType } from '@/db/models/question/types'
+import { resourceBasename } from '@/helpers/project'
 
 export interface JudgeQuestion {
   problem: string
@@ -19,7 +20,7 @@ export interface SelectQuestion {
 }
 
 async function loadJson<T>(type: string): Promise<T[]> {
-  const resp = await fetch(`/data/marx/${type}.json`, { method: 'get' })
+  const resp = await fetch(`${resourceBasename}/data/marx/${type}.json`, { method: 'get' })
   return await resp.json() as T[]
 }
 

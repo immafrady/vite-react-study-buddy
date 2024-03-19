@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import { RouterName } from '@/router/types'
 import { ExamConfigState } from '@/pages/exam-config/types'
 import { ExamType } from '@/services/exam-controller/types'
+import { resourceBasename } from '@/helpers/project'
 
 const Home = () => {
   const navigate = useNavigate()
@@ -67,7 +68,7 @@ const Home = () => {
                 <Button variant={'text'} onClick={() => item.action()}>START</Button>
               </CardActions>
             </Box>
-            <CardMedia sx={{ width: 170, minWidth: 170, height: 170,  background: `url('/images/cats.jpeg') -${item.background.x}px -${item.background.y}px` }} component={'div'} />
+            <CardMedia sx={{ width: 170, minWidth: 170, height: 170,  background: `url('${resourceBasename}/images/cats.jpeg') -${item.background.x}px -${item.background.y}px` }} component={'div'} />
           </Card>
       </Grid>) }
   </Grid>;
