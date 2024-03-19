@@ -20,8 +20,9 @@ const SelectQuizCard: React.FC<CommonCard> = ({ idx, onNext, ...cardProps }) => 
 
   const [value, setValue] = React.useState('')
   const [state, setState] = React.useState<CardState>(CardState.Edit)
+  const answerColor = useMemo(() => value === question?.answer ? 'success.light' : 'error.light', [value, question?.answer])
   const cardConfig = useMemo(() => {
-    const resultBorderColor = controller?.showAnswer ? (value === question?.answer ? 'success.light' : 'error.light') : 'transparent'
+    const resultBorderColor = controller?.showAnswer ? answerColor : 'transparent'
     switch (state) {
       case CardState.Edit:
         return {
@@ -42,7 +43,7 @@ const SelectQuizCard: React.FC<CommonCard> = ({ idx, onNext, ...cardProps }) => 
           borderColor: resultBorderColor
         }
     }
-  }, [controller?.showAnswer, value, question?.answer, state])
+  }, [controller?.showAnswer, state, answerColor])
 
   return <Card {...cardProps} sx={{ borderBottom: '2px solid transparent', borderColor: cardConfig.borderColor }}>
       <CardContent>
@@ -50,8 +51,10 @@ const SelectQuizCard: React.FC<CommonCard> = ({ idx, onNext, ...cardProps }) => 
         <Typography variant={'body1'} color={'text.primary'} gutterBottom textAlign={'justify'}>{ question?.problem }</Typography>
 
         {question?.type === QuestionType.Single && <SingleSelect disabled={cardConfig.disableSelect} options={question.options} onChange={(value) => setValue(value)} />}
-        {question?.type === QuestionType.Judge && <SingleSelect disabled={cardConfig.disableSelect} options={{ Y: '正确', X: '错误'}} onChange={(value) => setValue(value)} hideValueBeforeAnswer />}
+        {question?.type === QuestionType.Judge && <SingleSelect disabled={cardConfig.disableSelect} options={{ Y: '正确', X: '错误'}} onChange={(value) => setValue(value)} />}
         {question?.type === QuestionType.Multiple && <MultipleSelect disabled={cardConfig.disableSelect} options={question.options} onChange={(value) => setValue(value)} />}
+
+        {controller?.showAnswer && state !== CardState.Edit && <Typography variant={'body2'} color={answerColor}>答案：{question?.answer}</Typography> }
       </CardContent>
       <CardActions>
         { cardConfig.btnText && <Button size={'large'} onClick={async () => {
