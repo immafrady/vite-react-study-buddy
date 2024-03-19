@@ -1,5 +1,5 @@
 import { Collapse, Stack } from '@mui/material'
-import React, { useMemo } from 'react'
+import React from 'react'
 import { useLocation, Location, useNavigate } from 'react-router-dom'
 import { TransitionGroup } from 'react-transition-group'
 import StartCard from '@/pages/answer-sheet/cards/StartCard'
@@ -20,6 +20,10 @@ const AnswerSheet = () => {
   const location: Location<ExamControllerConfig> = useLocation();
   const navigate = useNavigate()
   const [controller, setController] = React.useState<AnswerSheetController|undefined>()
+  const [list, setList] = React.useState<React.FC<CommonCard>[]>([
+    StartCard
+  ])
+  const [index, setIndex] = React.useState(0)
 
   useMounted(async () => {
     if (location.state) {
@@ -32,27 +36,34 @@ const AnswerSheet = () => {
 
   const onNext = () => {
     if (controller) {
-      if (controller.questions.length > list.length + 1) {
+      if (controller.questions.length + 1> list.length) {
         setList(list => [...list, SelectQuizCard])
+        setIndex(index => index + 1)
       } else {
         // todo 结束
       }
     }
-    // setList(list => [StartCard, ...list])
   }
-
-  const [list, setList] = React.useState<React.FC<CommonCard>[]>([
-    StartCard
-  ])
 
   const stackRef = React.useRef<HTMLDivElement>(null)
   const [tY, setTy] = React.useState<number>(0)
+
   React.useEffect(() => {
     const ro = new ResizeObserver(entries => {
       if (stackRef.current) {
         const children = stackRef.current.children
-        setTy(children[children.length - 1].clientHeight / 2)
-        console.log('trigger!')
+        let height = 0
+        let isFirst = true
+        for (let i = index; i < children.length; i++) {
+          const offsetHeight = (children[i] as HTMLDivElement).offsetHeight
+          if (isFirst) { // 第一个要减半
+            isFirst = false
+            height += offsetHeight / 2
+          } else {
+            height += offsetHeight + parseFloat(getComputedStyle(children[i]).marginTop)
+          }
+        }
+        setTy(height)
       }
     })
     stackRef.current && ro.observe(stackRef.current)
@@ -60,15 +71,7 @@ const AnswerSheet = () => {
     return () => {
       stackRef.current && ro.unobserve(stackRef.current)
     }
-  }, [])
-  // const tY = useMemo(() => {
-  //   if (stackRef.current) {
-  //     const children = stackRef.current.children
-  //     return children[children.length - 1].clientHeight / 2
-  //   } else {
-  //     return 0
-  //   }
-  // }, [stackRef])
+  }, [index])
 
   return <AnswerSheetProvider value={controller}>
     <Box sx={{ position: 'relative', height: '100%', overflowY: 'visible', overflowX: 'visible' }}>
