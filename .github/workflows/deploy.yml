@@ -2,17 +2,29 @@ name: React app deployment
 
 on:
   push:
-    branches: [ master ]
+    branches: [ main ]
   pull_request:
-    branches: [ master ]
+    branches: [ main ]
 
 jobs:
-  build:
-
+  build-and-deploy:
     runs-on: ubuntu-latest
-    
     steps:
-    - uses: actions/checkout@v2
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 'v18.0.0'
 
-    - name: Deploy react app to github pages
-      uses: tanwanimohit/deploy-react-to-ghpages@v1.0.2
+      - name: Install & Build
+        run: |
+          npm install
+          npm run build
+      - name: Deploy
+        uses: JamesIves/github-pages-deploy-action@v4.3.0
+        with:
+            ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+            BRANCH: gh-pages
+            FOLDER: dist
+

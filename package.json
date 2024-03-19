@@ -2,6 +2,7 @@
   "name": "material-ui-vite-ts",
   "private": true,
   "version": "5.0.0",
+  "homepage": "https://immafrady.github.io/vite-react-study-buddy",
   "type": "module",
   "scripts": {
     "dev": "vite --host",
