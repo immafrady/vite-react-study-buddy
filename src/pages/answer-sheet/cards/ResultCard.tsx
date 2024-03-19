@@ -25,7 +25,6 @@ const ResultCard: React.FC<CommonCard> = ({ ...cardProps }) => {
             '#66FF00'
         ]
         let result = ''
-        console.log('score', controller?.score)
         for (let i = 0; i < palette.length && controller?.score! > i*10; i++) {
             result = palette[i]
         }
