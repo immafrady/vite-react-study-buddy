@@ -3,10 +3,11 @@ import { FormControl, FormControlLabel, Radio, RadioGroup, Typography } from '@m
 
 const SingleSelect: React.FC<{
   options: { [value: string]: string }
+  disabled: boolean
   value?: string
   onChange: (value: string) => void
   hideValueBeforeAnswer?: boolean
-}> = ({ options, value = '', onChange, hideValueBeforeAnswer }) => {
+}> = ({ options, disabled, value = '', onChange, hideValueBeforeAnswer }) => {
   const [innerValue, setValue] = React.useState(value)
 
   const parsedOptions = useMemo(() => {
@@ -24,6 +25,7 @@ const SingleSelect: React.FC<{
       }}
     >
       {parsedOptions.map((option) => <FormControlLabel
+        disabled={disabled}
         key={option.value}
         control={<Radio/>}
         label={<Typography variant={'body2'} textAlign={'justify'}>{!hideValueBeforeAnswer && `${option.value}. `}{option.label}</Typography>}

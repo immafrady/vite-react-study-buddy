@@ -10,6 +10,7 @@ export class Record implements IRecord {
     public classifyId: number,
     public questionIds: number[],
     public wrongQuestionIds: number[],
+    public questionAnswers: string[],
     public updateDate: Date
   ) {
   }
@@ -20,6 +21,7 @@ export class Record implements IRecord {
       classifyId: this.classifyId,
       questionIds: this.questionIds,
       wrongQuestionIds: this.wrongQuestionIds,
+      questionAnswers: this.questionAnswers,
       updateDate: this.updateDate,
     }
   }

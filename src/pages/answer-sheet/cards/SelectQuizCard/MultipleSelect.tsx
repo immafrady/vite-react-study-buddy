@@ -3,9 +3,10 @@ import { Checkbox, FormControl, FormControlLabel, FormGroup, Typography } from '
 
 const MultipleSelect: React.FC<{
   options: { [value: string]: string }
+  disabled: boolean
   value?: string
   onChange: (value: string) => void
-}> = ({ options, value = '', onChange }) => {
+}> = ({ options, disabled, value = '', onChange }) => {
   const [state, setState] = React.useState<{ [value: string]: boolean }>(
     Object.keys(options).reduce((acc, key) => ({ ...acc, [key]: value.includes(key) }), {})
   )
@@ -16,11 +17,12 @@ const MultipleSelect: React.FC<{
       value: value,
       isChecked: state[value],
     }))
-  }, [options, value])
+  }, [options, state])
 
   return <>
     <FormGroup>
       {parsedOptions.map(option => <FormControlLabel
+        disabled={disabled}
         key={option.value}
         control={
           <Checkbox

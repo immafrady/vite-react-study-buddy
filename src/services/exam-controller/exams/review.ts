@@ -3,6 +3,7 @@ import { IRecord } from '@/db/models/record/types'
 import { AppDatabase } from '@/db'
 import { useDatabase } from '@/stores/use-database'
 import { IQuestion } from '@/db/models/question/types'
+import { Record } from '@/db/models/record'
 
 export class ReviewExam implements ExamController {
   constructor(
@@ -13,12 +14,11 @@ export class ReviewExam implements ExamController {
   readonly showAnswer: boolean = true
 
   private db: AppDatabase = useDatabase.getState().db
-  record!: IRecord
+  record!: Record
   questions: IQuestion[] = []
 
   async newRecord() {
-    this.record = (await this.db.records.get(this.recordId))!
-
+    this.record = (await this.db.records.get(this.recordId))! as Record
   }
 
   async loadQuestions() {

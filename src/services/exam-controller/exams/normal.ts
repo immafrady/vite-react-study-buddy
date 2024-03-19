@@ -19,12 +19,12 @@ export class NormalExam implements ExamController {
   readonly showAnswer: boolean = true
 
   private db: AppDatabase = useDatabase.getState().db
-  record!: IRecord
+  record!: Record
   questions: IQuestion[] = []
 
   async newRecord() {
-    this.record = new Record(this.classifyId, [], [], new Date())
-    this.record.id = await this.db.records.add(this.record)
+    this.record = new Record(this.classifyId, [], [], [],new Date())
+    this.record.id = await this.db.records.add(this.record.toDBJson())
   }
 
   async loadQuestions() {
