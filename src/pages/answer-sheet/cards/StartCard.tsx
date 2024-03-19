@@ -14,11 +14,11 @@ const StartCard: React.FC<CommonCard> = ({ inactive, onNext, ...cardProps }) => 
       </Typography>
     </CardContent>
     <CardActions>
-      { !clicked ? <Button onClick={async () => {
+      { !clicked ? <Button fullWidth size={'large'} onClick={async () => {
         await controller?.start()
         onNext()
         setClicked(true)
-      }}>Start!</Button> : <Typography variant={'body1'} color={'primary.main'} textAlign={'center'} width={'100%'}>Go!Go!Go!</Typography> }
+      }}>Start!</Button> : <Typography variant={'h6'} color={'success.light'} textAlign={'center'} width={'100%'}>Go! Go! Go!</Typography> }
 
     </CardActions>
   </Card>
