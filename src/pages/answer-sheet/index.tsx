@@ -14,7 +14,6 @@ import SelectQuizCard from '@/pages/answer-sheet/cards/SelectQuizCard/index'
 import ResultCard from '@/pages/answer-sheet/cards/ResultCard'
 
 /**
- *
  * todo start之后，end之前，window.unload要加拦截
  */
 const AnswerSheet = () => {
