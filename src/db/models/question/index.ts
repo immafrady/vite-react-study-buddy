@@ -31,9 +31,9 @@ export class Question implements IQuestion {
     /**
      * 切换是否喜欢
      */
-    toggleLike() {
+    async toggleLike() {
         this.like = !this.like
-        useDatabase.getState().db.questions.update(this.id, { like: this.like})
+        await useDatabase.getState().db.questions.update(this.id, { like: this.like})
     }
 
     /**

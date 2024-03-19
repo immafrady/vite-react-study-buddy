@@ -1,10 +1,14 @@
 import React, { useMemo } from 'react'
 import { CommonCard } from '@/pages/answer-sheet/cards/types'
-import { Button, Card, CardActions, CardContent, Typography } from '@mui/material'
+import { Button, Card, CardActions, CardContent, IconButton, Stack, Typography } from '@mui/material'
 import { AnswerSheetContext } from '@/pages/answer-sheet/context'
 import { QuestionType } from '@/db/models/question/types'
 import SingleSelect from '@/pages/answer-sheet/cards/SelectQuizCard/SingleSelect'
 import MultipleSelect from '@/pages/answer-sheet/cards/SelectQuizCard/MultipleSelect'
+import Box from '@mui/material/Box'
+import { Favorite } from '@mui/icons-material'
+import { Question } from '@/db/models/question'
+import { useForceUpdate } from '@/hooks/use-force-update'
 
 enum CardState {
   Edit, // 答题状态
@@ -15,8 +19,9 @@ enum CardState {
 const SelectQuizCard: React.FC<CommonCard> = ({ idx, onNext, ...cardProps }) => {
   const controller = React.useContext(AnswerSheetContext)
   const question = React.useMemo(() => {
-    return controller?.questions[idx - 1]
+    return controller?.questions[idx - 1] as Question
   }, [controller?.questions, idx])
+  const forceUpdate = useForceUpdate()
 
   const [value, setValue] = React.useState('')
   const [state, setState] = React.useState<CardState>(CardState.Edit)
@@ -54,21 +59,32 @@ const SelectQuizCard: React.FC<CommonCard> = ({ idx, onNext, ...cardProps }) => 
         {question?.type === QuestionType.Judge && <SingleSelect disabled={cardConfig.disableSelect} options={{ Y: '正确', X: '错误'}} onChange={(value) => setValue(value)} />}
         {question?.type === QuestionType.Multiple && <MultipleSelect disabled={cardConfig.disableSelect} options={question.options} onChange={(value) => setValue(value)} />}
 
-        {controller?.showAnswer && state !== CardState.Edit && <Typography variant={'body2'} color={answerColor}>答案：{question?.answer}</Typography> }
       </CardContent>
       <CardActions>
-        { cardConfig.btnText && <Button size={'large'} onClick={async () => {
-          if (state === CardState.Edit) {
-              await controller?.updateRecord(question!.id, value, value === question!.answer)
-            if (controller?.showAnswer) { // 展示答案的话，会确认过再去下一题
-              setState(CardState.View)
-              return
-            }
-          }
-          // 其他状态会去到终态
-          setState(CardState.End)
-          onNext()
-        }}>{cardConfig.btnText}</Button>}
+        <Stack width={'100%'} alignItems={'center'} justifyContent={'space-between'} flexDirection={'row'}>
+          <Box>
+            { cardConfig.btnText && <Button size={'large'} onClick={async () => {
+              if (state === CardState.Edit) {
+                await controller?.updateRecord(question!.id, value, value === question!.answer)
+                if (controller?.showAnswer) { // 展示答案的话，会确认过再去下一题
+                  setState(CardState.View)
+                  return
+                }
+              }
+              // 其他状态会去到终态
+              setState(CardState.End)
+              onNext()
+            }}>{cardConfig.btnText}</Button>}
+          </Box>
+          <Stack alignItems={'center'} flexDirection={'row'}>
+            {controller?.showAnswer && state !== CardState.Edit && <Typography variant={'body2'} color={answerColor}>答案：{question?.answer}</Typography> }
+            <IconButton size={'small'} onClick={async () => {
+              await question.toggleLike()
+              forceUpdate()
+            }}><Favorite color={question.like ? 'warning' : 'disabled'}/></IconButton>
+          </Stack>
+        </Stack>
+
       </CardActions>
   </Card>
 }
