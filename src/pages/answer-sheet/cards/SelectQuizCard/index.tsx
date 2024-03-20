@@ -63,7 +63,7 @@ const SelectQuizCard: React.FC<CommonCard> = ({ idx, onNext, ...cardProps }) => 
       <CardActions>
         <Stack width={'100%'} alignItems={'center'} justifyContent={'space-between'} flexDirection={'row'}>
           <Box>
-            { cardConfig.btnText && <Button size={'large'} onClick={async () => {
+            { cardConfig.btnText && <Button size={'large'} disabled={!value} onClick={async () => {
               if (state === CardState.Edit) {
                 const isCorrect = value === question!.answer
                 await controller?.updateRecord(question!.id, value, isCorrect)
