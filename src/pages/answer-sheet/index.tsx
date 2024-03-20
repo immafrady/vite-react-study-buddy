@@ -1,4 +1,4 @@
-import { Slide, Stack } from '@mui/material'
+import { Button, IconButton, Slide, Stack, useTheme } from '@mui/material'
 import React from 'react'
 import { Location, useLocation, useNavigate } from 'react-router-dom'
 import { TransitionGroup } from 'react-transition-group'
@@ -13,6 +13,7 @@ import SelectQuizCard from '@/pages/answer-sheet/cards/SelectQuizCard/index'
 import ResultCard from '@/pages/answer-sheet/cards/ResultCard'
 import { ExamState } from '@/services/exam-controller/types'
 import { useCardList } from '@/pages/answer-sheet/use-card-list'
+import { ArrowCircleDown, ArrowCircleUp } from '@mui/icons-material'
 
 /**
  * todo start之后，end之前，window.unload要加拦截
@@ -20,7 +21,10 @@ import { useCardList } from '@/pages/answer-sheet/use-card-list'
 const AnswerSheet = () => {
   const location: Location<ExamControllerConfig> = useLocation();
   const navigate = useNavigate()
+  const theme = useTheme()
+
   const [controller, setController] = React.useState<AnswerSheetController|undefined>()
+  const [viewMode, setViewMode] = React.useState(false)
 
   const [cardListState, cardListDispatch] = useCardList([StartCard])
 
@@ -40,6 +44,7 @@ const AnswerSheet = () => {
         cardListDispatch({ type: 'add', card: SelectQuizCard })
       } else {
         controller.setExamState(ExamState.Finish)
+        setViewMode(true)
         cardListDispatch({ type: 'add', card: ResultCard })
       }
     }
@@ -47,6 +52,7 @@ const AnswerSheet = () => {
 
   const stackRef = React.useRef<HTMLDivElement>(null)
   const [tY, setTy] = React.useState<number>(0)
+  const [viewH, setViewH] = React.useState(0)
 
   React.useEffect(() => {
     const ro = new ResizeObserver(entries => {
@@ -60,6 +66,8 @@ const AnswerSheet = () => {
             if (isFirst) { // 第一个要减半
               isFirst = false
               height += offsetHeight / 2
+              console.log('height: ', offsetHeight)
+              setViewH(offsetHeight)
             } else {
               height += offsetHeight + parseFloat(getComputedStyle(children[i]).marginTop)
             }
@@ -82,7 +90,7 @@ const AnswerSheet = () => {
         width: '100%',
         bottom: '50%',
         transform: `translateY(${tY}px)`,
-        // transition: 'transform 0.2s',
+        transition: viewMode ? 'transform 0.2s ease-in-out' : '',
         '&::after': {
           display: 'block',
           content: '""',
@@ -106,6 +114,34 @@ const AnswerSheet = () => {
           </Slide>) }
         </TransitionGroup>
       </Stack>
+      { viewH && <>
+        <Box sx={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          height: `calc((100vh - ${theme.mixins.toolbar.minHeight}px - ${viewH}px) / 2 + ${theme.mixins.toolbar.minHeight}px)`,
+          background: `linear-gradient(to bottom, ${theme.palette.background.paper} 50%, transparent)`,
+        }}></Box>
+        <Box sx={{
+          position: 'fixed',
+          bottom: 0,
+          left: 0,
+          right: 0,
+          height: `calc((100vh - ${theme.mixins.toolbar.minHeight}px - ${viewH}px) / 2 - ${theme.mixins.toolbar.minHeight}px)`,
+          background: `linear-gradient(to bottom, transparent, ${theme.palette.background.paper} 50%)`,
+        }}>
+          {viewMode && <Stack flexDirection={'row'} justifyContent={'center'} gap={5} sx={{
+            position: 'absolute',
+            width: '100%',
+            bottom: {xs: 5, sm: 10, md: 15, lg: 20, xl: 25},
+          }}>
+            <IconButton color={'secondary'} size={'large'} onClick={() => cardListDispatch({type: 'move-down'})}><ArrowCircleUp/></IconButton>
+            <IconButton color={'secondary'} size={'large'} onClick={() => cardListDispatch({type: 'move-up'})}><ArrowCircleDown/></IconButton>
+          </Stack>}
+        </Box>
+      </> }
+
     </Box>
   </AnswerSheetProvider>
 }
