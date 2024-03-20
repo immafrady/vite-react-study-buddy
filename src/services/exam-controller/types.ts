@@ -7,7 +7,14 @@ export enum ExamType {
   Review, // 复习模式
 }
 
+export enum ExamState {
+  Prepare, // 准备中
+  Ongoing, // 进行中
+  Finish // 结束
+}
+
 export interface ExamController {
+  state: ExamState
   record: IRecord
   questions: IQuestion[]
   // 特定的配置

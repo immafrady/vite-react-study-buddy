@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import React from 'react'
 import { CommonCard } from '@/pages/answer-sheet/cards/types'
 import { Button, Card, CardActions, CardContent, IconButton, Stack, Typography } from '@mui/material'
 import { AnswerSheetContext } from '@/pages/answer-sheet/context'
@@ -16,7 +16,7 @@ enum CardState {
   End // 终态
 }
 
-const SelectQuizCard: React.FC<CommonCard> = ({ idx, onNext, ...cardProps }) => {
+const SelectQuizCard: React.FC<CommonCard> = React.forwardRef(({ idx, onNext, ...cardProps }, ref) => {
   const controller = React.useContext(AnswerSheetContext)
   const question = React.useMemo(() => {
     return controller?.questions[idx - 1] as Question
@@ -25,8 +25,8 @@ const SelectQuizCard: React.FC<CommonCard> = ({ idx, onNext, ...cardProps }) => 
 
   const [value, setValue] = React.useState('')
   const [state, setState] = React.useState<CardState>(CardState.Edit)
-  const answerColor = useMemo(() => value === question?.answer ? 'success.light' : 'error.light', [value, question?.answer])
-  const cardConfig = useMemo(() => {
+  const answerColor = React.useMemo(() => value === question?.answer ? 'success.light' : 'error.light', [value, question?.answer])
+  const cardConfig = React.useMemo(() => {
     const resultBorderColor = controller?.showAnswer ? answerColor : 'transparent'
     switch (state) {
       case CardState.Edit:
@@ -50,7 +50,7 @@ const SelectQuizCard: React.FC<CommonCard> = ({ idx, onNext, ...cardProps }) => 
     }
   }, [controller?.showAnswer, state, answerColor])
 
-  return <Card {...cardProps} sx={{ borderBottom: '2px solid transparent', borderColor: cardConfig.borderColor }}>
+  return <Card ref={ref} {...cardProps} sx={{ borderBottom: '2px solid transparent', borderColor: cardConfig.borderColor }}>
       <CardContent>
         <Typography variant={'body2'} color={'text.secondary'}>({idx}/{controller?.questions.length} {question?.type})</Typography>
         <Typography variant={'body1'} color={'text.primary'} gutterBottom textAlign={'justify'}>{ question?.problem }</Typography>
@@ -63,10 +63,11 @@ const SelectQuizCard: React.FC<CommonCard> = ({ idx, onNext, ...cardProps }) => 
       <CardActions>
         <Stack width={'100%'} alignItems={'center'} justifyContent={'space-between'} flexDirection={'row'}>
           <Box>
-            { cardConfig.btnText && <Button size={'large'} onClick={async () => {
+            { cardConfig.btnText && <Button size={'large'} disabled={!value} onClick={async () => {
               if (state === CardState.Edit) {
-                await controller?.updateRecord(question!.id, value, value === question!.answer)
-                if (controller?.showAnswer) { // 展示答案的话，会确认过再去下一题
+                const isCorrect = value === question!.answer
+                await controller?.updateRecord(question!.id, value, isCorrect)
+                if (controller?.showAnswer && !isCorrect) { // 展示答案的话，会确认过再去下一题（然后正确的场景会跳过）
                   setState(CardState.View)
                   return
                 }
@@ -76,7 +77,7 @@ const SelectQuizCard: React.FC<CommonCard> = ({ idx, onNext, ...cardProps }) => 
               onNext()
             }}>{cardConfig.btnText}</Button>}
           </Box>
-          <Stack alignItems={'center'} flexDirection={'row'}>
+          <Stack alignItems={'center'} gap={1} flexDirection={'row'}>
             {controller?.showAnswer && state !== CardState.Edit && <Typography variant={'body2'} color={answerColor}>答案：{question?.answer}</Typography> }
             <IconButton size={'small'} onClick={async () => {
               await question.toggleLike()
@@ -87,6 +88,6 @@ const SelectQuizCard: React.FC<CommonCard> = ({ idx, onNext, ...cardProps }) => 
 
       </CardActions>
   </Card>
-}
+})
 
 export default SelectQuizCard

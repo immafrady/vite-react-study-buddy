@@ -1,4 +1,4 @@
-import { ExamController } from '@/services/exam-controller/types'
+import { ExamController, ExamState } from '@/services/exam-controller/types'
 import { IRecord } from '@/db/models/record/types'
 import { AppDatabase } from '@/db'
 import { useDatabase } from '@/stores/use-database'
@@ -10,6 +10,7 @@ export class ReviewExam implements ExamController {
     private recordId: number,
   ) {}
 
+  state = ExamState.Prepare
   readonly showInfo: boolean = true
   readonly showAnswer: boolean = true
 

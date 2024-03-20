@@ -1,5 +1,5 @@
 import { AppDatabase } from '@/db'
-import { ExamController } from '@/services/exam-controller/types'
+import { ExamController, ExamState } from '@/services/exam-controller/types'
 import { ExamControllerConfig, genExamController } from '@/services/exam-controller'
 import { useDatabase } from '@/stores/use-database'
 
@@ -41,5 +41,10 @@ export class AnswerSheetController {
       questionIds: this.examController.record.questionIds,
       updateDate: new Date()
     })
+  }
+
+  // 推进到下一个状态
+  setExamState(state: ExamState) {
+    this.examController.state = state
   }
 }

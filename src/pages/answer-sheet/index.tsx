@@ -1,9 +1,8 @@
-import { Collapse, Stack } from '@mui/material'
+import { IconButton, Slide, Stack, useTheme } from '@mui/material'
 import React from 'react'
-import { useLocation, Location, useNavigate } from 'react-router-dom'
+import { Location, useLocation, useNavigate } from 'react-router-dom'
 import { TransitionGroup } from 'react-transition-group'
 import StartCard from '@/pages/answer-sheet/cards/StartCard'
-import { CommonCard } from '@/pages/answer-sheet/cards/types'
 import Box from '@mui/material/Box'
 import { RouterName } from '@/router/types'
 import { AnswerSheetController } from '@/pages/answer-sheet/controller'
@@ -12,6 +11,9 @@ import { useMounted } from '@/hooks/use-mounted'
 import { ExamControllerConfig } from '@/services/exam-controller'
 import SelectQuizCard from '@/pages/answer-sheet/cards/SelectQuizCard/index'
 import ResultCard from '@/pages/answer-sheet/cards/ResultCard'
+import { ExamState } from '@/services/exam-controller/types'
+import { useCardList } from '@/pages/answer-sheet/use-card-list'
+import { ArrowCircleDown, ArrowCircleUp } from '@mui/icons-material'
 
 /**
  * todo start之后，end之前，window.unload要加拦截
@@ -19,12 +21,25 @@ import ResultCard from '@/pages/answer-sheet/cards/ResultCard'
 const AnswerSheet = () => {
   const location: Location<ExamControllerConfig> = useLocation();
   const navigate = useNavigate()
-  const [controller, setController] = React.useState<AnswerSheetController|undefined>()
-  const [list, setList] = React.useState<React.FC<CommonCard>[]>([
-    StartCard
-  ])
-  const [index, setIndex] = React.useState(0)
+  const theme = useTheme()
 
+  const [controller, setController] = React.useState<AnswerSheetController|undefined>()
+  const [examState, setExamState] = React.useState(ExamState.Prepare)
+
+  const [cardListState, cardListDispatch] = useCardList([StartCard])
+
+  // 在答题过程中，退出会有提示
+  React.useEffect(() => {
+    const handleBeforeUnload = (event: WindowEventMap['beforeunload']) => {
+      event.preventDefault()
+    };
+    if (examState === ExamState.Ongoing) {
+      window.addEventListener('beforeunload', handleBeforeUnload)
+    }
+    return () => window.removeEventListener('beforeunload', handleBeforeUnload)
+  }, [examState])
+
+  // 初始化函数
   useMounted(async () => {
     if (location.state) {
       const controller = new AnswerSheetController(location.state)
@@ -34,19 +49,25 @@ const AnswerSheet = () => {
     }
   })
 
+  // 下一步按钮
   const onNext = () => {
     if (controller) {
-      if (controller.questions.length + 1> list.length) {
-        setList(list => [...list, SelectQuizCard])
+      if (controller.questions.length + 1> cardListState.cards.length) {
+        controller.setExamState(ExamState.Ongoing)
+        setExamState(ExamState.Ongoing)
+        cardListDispatch({ type: 'add', card: SelectQuizCard })
       } else {
-        setList(list => [...list, ResultCard])
+        controller.setExamState(ExamState.Finish)
+        setExamState(ExamState.Finish)
+        cardListDispatch({ type: 'add', card: ResultCard })
       }
-      setIndex(index => index + 1)
     }
   }
 
+  // 视图相关操作
   const stackRef = React.useRef<HTMLDivElement>(null)
   const [tY, setTy] = React.useState<number>(0)
+  const [viewH, setViewH] = React.useState(0)
 
   React.useEffect(() => {
     const ro = new ResizeObserver(entries => {
@@ -55,11 +76,13 @@ const AnswerSheet = () => {
           const children = stackRef.current.children
           let height = 0
           let isFirst = true
-          for (let i = index; i < children.length; i++) {
+          for (let i = cardListState.page; i < children.length; i++) {
             const offsetHeight = (children[i] as HTMLDivElement).offsetHeight
             if (isFirst) { // 第一个要减半
               isFirst = false
               height += offsetHeight / 2
+              console.log('height: ', offsetHeight)
+              setViewH(offsetHeight)
             } else {
               height += offsetHeight + parseFloat(getComputedStyle(children[i]).marginTop)
             }
@@ -73,7 +96,7 @@ const AnswerSheet = () => {
     return () => {
       stackRef.current && ro.unobserve(stackRef.current)
     }
-  }, [index])
+  }, [cardListState.page])
 
   return <AnswerSheetProvider value={controller}>
     <Box sx={{ position: 'relative', height: '100%', overflowY: 'visible', overflowX: 'visible' }}>
@@ -82,6 +105,7 @@ const AnswerSheet = () => {
         width: '100%',
         bottom: '50%',
         transform: `translateY(${tY}px)`,
+        transition: examState === ExamState.Finish ? 'transform 0.2s ease-in-out' : '',
         '&::after': {
           display: 'block',
           content: '""',
@@ -95,16 +119,44 @@ const AnswerSheet = () => {
         }
       }}>
         <TransitionGroup component={null}>
-          { list.map((component, idx) => <Collapse key={idx}>
+          { cardListState.cards.map((component, idx) => <Slide direction={'up'} mountOnEnter unmountOnExit key={idx}>
             { React.createElement(component, {
               key: idx,
               idx,
               elevation: 3,
               onNext,
             }) }
-          </Collapse>) }
+          </Slide>) }
         </TransitionGroup>
       </Stack>
+      { viewH && <>
+        <Box sx={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          height: `calc((100vh - ${theme.mixins.toolbar.minHeight}px - ${viewH}px) / 2 + ${theme.mixins.toolbar.minHeight}px)`,
+          background: `linear-gradient(to bottom, ${theme.palette.background.paper} 50%, transparent)`,
+        }}></Box>
+        <Box sx={{
+          position: 'fixed',
+          bottom: 0,
+          left: 0,
+          right: 0,
+          height: `calc((100vh - ${theme.mixins.toolbar.minHeight}px - ${viewH}px) / 2 - ${theme.mixins.toolbar.minHeight}px)`,
+          background: `linear-gradient(to bottom, transparent, ${theme.palette.background.paper} 50%)`,
+        }}>
+          {examState === ExamState.Finish && <Stack flexDirection={'row'} justifyContent={'center'} gap={5} sx={{
+            position: 'absolute',
+            width: '100%',
+            bottom: {xs: 5, sm: 10, md: 15, lg: 20, xl: 25},
+          }}>
+            <IconButton color={'secondary'} size={'large'} onClick={() => cardListDispatch({type: 'move-down'})}><ArrowCircleUp/></IconButton>
+            <IconButton color={'secondary'} size={'large'} onClick={() => cardListDispatch({type: 'move-up'})}><ArrowCircleDown/></IconButton>
+          </Stack>}
+        </Box>
+      </> }
+
     </Box>
   </AnswerSheetProvider>
 }

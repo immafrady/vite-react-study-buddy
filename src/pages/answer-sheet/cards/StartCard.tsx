@@ -3,11 +3,11 @@ import { CommonCard } from '@/pages/answer-sheet/cards/types'
 import { Button, Card, CardActions, CardContent, Typography } from '@mui/material'
 import { AnswerSheetContext } from '@/pages/answer-sheet/context'
 
-const StartCard: React.FC<CommonCard> = ({ inactive, onNext, ...cardProps }) => {
+const StartCard: React.FC<CommonCard> = React.forwardRef(({ inactive, onNext, ...cardProps }, ref) => {
   const controller = React.useContext(AnswerSheetContext)
   const [clicked, setClicked] = React.useState(false)
 
-  return <Card {...cardProps} >
+  return <Card ref={ref} {...cardProps} >
     <CardContent>
       <Typography variant={'h6'} textAlign={'center'}>
         准备好了吗？让我们开始吧！
@@ -22,6 +22,6 @@ const StartCard: React.FC<CommonCard> = ({ inactive, onNext, ...cardProps }) => 
 
     </CardActions>
   </Card>
-}
+})
 
 export default StartCard

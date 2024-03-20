@@ -5,7 +5,7 @@ import { Button, Card, CardActions, CardContent, Typography } from '@mui/materia
 import { useNavigate } from 'react-router-dom'
 import { RouterName } from '@/router/types'
 
-const ResultCard: React.FC<CommonCard> = ({ ...cardProps }) => {
+const ResultCard: React.FC<CommonCard> = React.forwardRef(({ ...cardProps }, ref) => {
     const navigate = useNavigate()
     const controller = React.useContext(AnswerSheetContext)
 
@@ -30,7 +30,7 @@ const ResultCard: React.FC<CommonCard> = ({ ...cardProps }) => {
         }
         return result
     }, [controller?.score])
-    return <Card {...cardProps} >
+    return <Card ref={ref} {...cardProps} >
         <CardContent>
             <Typography variant={'h6'} textAlign={'center'}>恭喜完成答题</Typography>
             <Typography variant={'body2'} textAlign={'center'} color={'text.secondary'}>你的成绩是</Typography>
@@ -41,6 +41,6 @@ const ResultCard: React.FC<CommonCard> = ({ ...cardProps }) => {
            <Button fullWidth onClick={() => navigate(RouterName.Home)}>回到首页</Button>
         </CardActions>
     </Card>
-}
+})
 
 export default ResultCard
