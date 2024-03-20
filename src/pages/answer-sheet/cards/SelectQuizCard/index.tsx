@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react'
 import { CommonCard } from '@/pages/answer-sheet/cards/types'
-import { Button, Card, CardActions, CardContent, IconButton, Stack, Typography } from '@mui/material'
+import { Button, Card, CardActions, CardContent, Chip, IconButton, Stack, Typography } from '@mui/material'
 import { AnswerSheetContext } from '@/pages/answer-sheet/context'
 import { QuestionType } from '@/db/models/question/types'
 import SingleSelect from '@/pages/answer-sheet/cards/SelectQuizCard/SingleSelect'
@@ -77,7 +77,7 @@ const SelectQuizCard: React.FC<CommonCard> = ({ idx, onNext, ...cardProps }) => 
               onNext()
             }}>{cardConfig.btnText}</Button>}
           </Box>
-          <Stack alignItems={'center'} flexDirection={'row'}>
+          <Stack alignItems={'center'} gap={1} flexDirection={'row'}>
             {controller?.showAnswer && state !== CardState.Edit && <Typography variant={'body2'} color={answerColor}>答案：{question?.answer}</Typography> }
             <IconButton size={'small'} onClick={async () => {
               await question.toggleLike()
