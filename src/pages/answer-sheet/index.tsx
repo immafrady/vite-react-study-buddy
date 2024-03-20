@@ -1,9 +1,8 @@
-import { Collapse, Stack } from '@mui/material'
+import { Slide, Stack } from '@mui/material'
 import React from 'react'
 import { Location, useLocation, useNavigate } from 'react-router-dom'
 import { TransitionGroup } from 'react-transition-group'
 import StartCard from '@/pages/answer-sheet/cards/StartCard'
-import { CommonCard } from '@/pages/answer-sheet/cards/types'
 import Box from '@mui/material/Box'
 import { RouterName } from '@/router/types'
 import { AnswerSheetController } from '@/pages/answer-sheet/controller'
@@ -13,6 +12,7 @@ import { ExamControllerConfig } from '@/services/exam-controller'
 import SelectQuizCard from '@/pages/answer-sheet/cards/SelectQuizCard/index'
 import ResultCard from '@/pages/answer-sheet/cards/ResultCard'
 import { ExamState } from '@/services/exam-controller/types'
+import { useCardList } from '@/pages/answer-sheet/use-card-list'
 
 /**
  * todo start之后，end之前，window.unload要加拦截
@@ -21,10 +21,8 @@ const AnswerSheet = () => {
   const location: Location<ExamControllerConfig> = useLocation();
   const navigate = useNavigate()
   const [controller, setController] = React.useState<AnswerSheetController|undefined>()
-  const [list, setList] = React.useState<React.FC<CommonCard>[]>([
-    StartCard
-  ])
-  const [index, setIndex] = React.useState(0)
+
+  const [cardListState, cardListDispatch] = useCardList([StartCard])
 
   useMounted(async () => {
     if (location.state) {
@@ -37,14 +35,13 @@ const AnswerSheet = () => {
 
   const onNext = () => {
     if (controller) {
-      if (controller.questions.length + 1> list.length) {
+      if (controller.questions.length + 1> cardListState.cards.length) {
         controller.setExamState(ExamState.Ongoing)
-        setList(list => [...list, SelectQuizCard])
+        cardListDispatch({ type: 'add', card: SelectQuizCard })
       } else {
         controller.setExamState(ExamState.Finish)
-        setList(list => [...list, ResultCard])
+        cardListDispatch({ type: 'add', card: ResultCard })
       }
-      setIndex(index => index + 1)
     }
   }
 
@@ -58,7 +55,7 @@ const AnswerSheet = () => {
           const children = stackRef.current.children
           let height = 0
           let isFirst = true
-          for (let i = index; i < children.length; i++) {
+          for (let i = cardListState.page; i < children.length; i++) {
             const offsetHeight = (children[i] as HTMLDivElement).offsetHeight
             if (isFirst) { // 第一个要减半
               isFirst = false
@@ -76,7 +73,7 @@ const AnswerSheet = () => {
     return () => {
       stackRef.current && ro.unobserve(stackRef.current)
     }
-  }, [index])
+  }, [cardListState.page])
 
   return <AnswerSheetProvider value={controller}>
     <Box sx={{ position: 'relative', height: '100%', overflowY: 'visible', overflowX: 'visible' }}>
@@ -85,6 +82,7 @@ const AnswerSheet = () => {
         width: '100%',
         bottom: '50%',
         transform: `translateY(${tY}px)`,
+        // transition: 'transform 0.2s',
         '&::after': {
           display: 'block',
           content: '""',
@@ -98,14 +96,14 @@ const AnswerSheet = () => {
         }
       }}>
         <TransitionGroup component={null}>
-          { list.map((component, idx) => <Collapse key={idx}>
+          { cardListState.cards.map((component, idx) => <Slide direction={'up'} mountOnEnter unmountOnExit key={idx}>
             { React.createElement(component, {
               key: idx,
               idx,
               elevation: 3,
               onNext,
             }) }
-          </Collapse>) }
+          </Slide>) }
         </TransitionGroup>
       </Stack>
     </Box>
