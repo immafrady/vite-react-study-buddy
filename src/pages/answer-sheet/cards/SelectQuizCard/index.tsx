@@ -1,6 +1,6 @@
-import React, { useMemo } from 'react'
+import React from 'react'
 import { CommonCard } from '@/pages/answer-sheet/cards/types'
-import { Button, Card, CardActions, CardContent, Chip, IconButton, Stack, Typography } from '@mui/material'
+import { Button, Card, CardActions, CardContent, IconButton, Stack, Typography } from '@mui/material'
 import { AnswerSheetContext } from '@/pages/answer-sheet/context'
 import { QuestionType } from '@/db/models/question/types'
 import SingleSelect from '@/pages/answer-sheet/cards/SelectQuizCard/SingleSelect'
@@ -16,7 +16,7 @@ enum CardState {
   End // 终态
 }
 
-const SelectQuizCard: React.FC<CommonCard> = ({ idx, onNext, ...cardProps }) => {
+const SelectQuizCard: React.FC<CommonCard> = React.forwardRef(({ idx, onNext, ...cardProps }, ref) => {
   const controller = React.useContext(AnswerSheetContext)
   const question = React.useMemo(() => {
     return controller?.questions[idx - 1] as Question
@@ -25,8 +25,8 @@ const SelectQuizCard: React.FC<CommonCard> = ({ idx, onNext, ...cardProps }) => 
 
   const [value, setValue] = React.useState('')
   const [state, setState] = React.useState<CardState>(CardState.Edit)
-  const answerColor = useMemo(() => value === question?.answer ? 'success.light' : 'error.light', [value, question?.answer])
-  const cardConfig = useMemo(() => {
+  const answerColor = React.useMemo(() => value === question?.answer ? 'success.light' : 'error.light', [value, question?.answer])
+  const cardConfig = React.useMemo(() => {
     const resultBorderColor = controller?.showAnswer ? answerColor : 'transparent'
     switch (state) {
       case CardState.Edit:
@@ -50,7 +50,7 @@ const SelectQuizCard: React.FC<CommonCard> = ({ idx, onNext, ...cardProps }) => 
     }
   }, [controller?.showAnswer, state, answerColor])
 
-  return <Card {...cardProps} sx={{ borderBottom: '2px solid transparent', borderColor: cardConfig.borderColor }}>
+  return <Card ref={ref} {...cardProps} sx={{ borderBottom: '2px solid transparent', borderColor: cardConfig.borderColor }}>
       <CardContent>
         <Typography variant={'body2'} color={'text.secondary'}>({idx}/{controller?.questions.length} {question?.type})</Typography>
         <Typography variant={'body1'} color={'text.primary'} gutterBottom textAlign={'justify'}>{ question?.problem }</Typography>
@@ -88,6 +88,6 @@ const SelectQuizCard: React.FC<CommonCard> = ({ idx, onNext, ...cardProps }) => 
 
       </CardActions>
   </Card>
-}
+})
 
 export default SelectQuizCard
