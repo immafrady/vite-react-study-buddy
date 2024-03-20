@@ -1,6 +1,6 @@
 import { Collapse, Stack } from '@mui/material'
 import React from 'react'
-import { useLocation, Location, useNavigate } from 'react-router-dom'
+import { Location, useLocation, useNavigate } from 'react-router-dom'
 import { TransitionGroup } from 'react-transition-group'
 import StartCard from '@/pages/answer-sheet/cards/StartCard'
 import { CommonCard } from '@/pages/answer-sheet/cards/types'
@@ -12,6 +12,7 @@ import { useMounted } from '@/hooks/use-mounted'
 import { ExamControllerConfig } from '@/services/exam-controller'
 import SelectQuizCard from '@/pages/answer-sheet/cards/SelectQuizCard/index'
 import ResultCard from '@/pages/answer-sheet/cards/ResultCard'
+import { ExamState } from '@/services/exam-controller/types'
 
 /**
  * todo start之后，end之前，window.unload要加拦截
@@ -37,8 +38,10 @@ const AnswerSheet = () => {
   const onNext = () => {
     if (controller) {
       if (controller.questions.length + 1> list.length) {
+        controller.setExamState(ExamState.Ongoing)
         setList(list => [...list, SelectQuizCard])
       } else {
+        controller.setExamState(ExamState.Finish)
         setList(list => [...list, ResultCard])
       }
       setIndex(index => index + 1)
