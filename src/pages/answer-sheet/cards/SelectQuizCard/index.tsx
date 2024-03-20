@@ -65,8 +65,9 @@ const SelectQuizCard: React.FC<CommonCard> = ({ idx, onNext, ...cardProps }) => 
           <Box>
             { cardConfig.btnText && <Button size={'large'} onClick={async () => {
               if (state === CardState.Edit) {
-                await controller?.updateRecord(question!.id, value, value === question!.answer)
-                if (controller?.showAnswer) { // 展示答案的话，会确认过再去下一题
+                const isCorrect = value === question!.answer
+                await controller?.updateRecord(question!.id, value, isCorrect)
+                if (controller?.showAnswer && !isCorrect) { // 展示答案的话，会确认过再去下一题（然后正确的场景会跳过）
                   setState(CardState.View)
                   return
                 }
