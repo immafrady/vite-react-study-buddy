@@ -1,13 +1,13 @@
-import { ExamController, ExamState } from '@/services/exam-controller/types'
-import { IRecord } from '@/db/models/record/types'
-import { IQuestion, QuestionType } from '@/db/models/question/types'
+import { ExamService, ExamState } from '../types'
+import { QuestionType } from '@/db/models/question/types'
 import { AppDatabase } from '@/db'
 import { useDatabase } from '@/stores/use-database'
 import { Record } from '@/db/models/record'
 import questionsOp from '@/services/data-operations/questions';
 import { pick, shuffle } from '@/helpers/array'
+import { Question } from '@/db/models/question'
 
-export class NormalExam implements ExamController {
+export class NormalExam implements ExamService {
   constructor(
     private classifyId: number,
     private types: QuestionType[],
@@ -21,7 +21,7 @@ export class NormalExam implements ExamController {
 
   private db: AppDatabase = useDatabase.getState().db
   record!: Record
-  questions: IQuestion[] = []
+  questions: Question[] = []
 
   async newRecord() {
     this.record = new Record(this.classifyId, [], [], [],new Date())
@@ -29,7 +29,7 @@ export class NormalExam implements ExamController {
   }
 
   async loadQuestions() {
-    const qs = await questionsOp.loaders.byClassifyIdAndTypes(this.classifyId, this.types)
+    const qs = (await questionsOp.loaders.byClassifyIdAndTypes(this.classifyId, this.types)) as Question[]
     const groupBys = questionsOp.handlers.groupBy(qs, 'count')
     this.questions = []
     let count = this.count

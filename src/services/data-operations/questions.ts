@@ -1,5 +1,6 @@
 import { useDatabase } from '@/stores/use-database'
-import { IQuestion, QuestionType } from '@/db/models/question/types'
+import { QuestionType } from '@/db/models/question/types'
+import { Question } from '@/db/models/question'
 
 const db = useDatabase.getState().db
 
@@ -33,7 +34,7 @@ const handlers = {
    * @param field
    * @param isAsc
    */
-  orderBy: (questions: IQuestion[], field: 'wrongCount'|'count', isAsc: boolean) => {
+  orderBy: (questions: Question[], field: 'wrongCount'|'count', isAsc: boolean) => {
     return questions.sort((a, b) => {
       const aVal = a[field]
       const bVal = b[field]
@@ -45,8 +46,8 @@ const handlers = {
    * @param questions
    * @param field
    */
-  groupBy: (questions: IQuestion[], field: 'wrongCount'|'count'): [number, IQuestion[]][] => {
-    const map = new Map<number, IQuestion[]>()
+  groupBy: (questions: Question[], field: 'wrongCount'|'count'): [number, Question[]][] => {
+    const map = new Map<number, Question[]>()
     questions.forEach(q => {
       const count = q[field]
       if (map.has(count)) {

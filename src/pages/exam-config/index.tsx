@@ -23,8 +23,8 @@ import { useLiveQuery } from 'dexie-react-hooks'
 import Box from '@mui/material/Box'
 import { QuestionType } from '@/db/models/question/types'
 import { RouterName } from '@/router/types'
-import { ExamControllerConfig } from '@/services/exam-controller'
-import { ExamType } from '@/services/exam-controller/types'
+import { ExamServiceConfig } from '@/services/exam-service'
+import { ExamType } from '@/services/exam-service/types'
 
 const ExamConfig = () => {
   const navigate = useNavigate()
@@ -103,7 +103,7 @@ const ExamConfig = () => {
               types: form.types,
               count: +form.count,
               type: ExamType.Normal
-            } as ExamControllerConfig
+            } as ExamServiceConfig
           })
         }}>下一步</Button>
       </Stack>

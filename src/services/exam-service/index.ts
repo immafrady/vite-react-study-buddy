@@ -1,9 +1,9 @@
-import { ExamController, ExamType } from './types'
-import { NormalExam } from '@/services/exam-controller/exams/normal'
+import { ExamService, ExamType } from './types'
 import { QuestionType } from '@/db/models/question/types'
-import { ReviewExam } from '@/services/exam-controller/exams/review'
+import { NormalExam } from './exams/normal'
+import { ReviewExam } from './exams/review'
 
-export type ExamControllerConfig = {
+export type ExamServiceConfig = {
   type: ExamType.Normal | ExamType.Exam
   classifyId: number
   types: QuestionType[]
@@ -13,7 +13,7 @@ export type ExamControllerConfig = {
   recordId: number
 }
 
-export const genExamController = (payload: ExamControllerConfig): ExamController => {
+export const newExamService = (payload: ExamServiceConfig): ExamService => {
   switch (payload.type) {
     case ExamType.Normal:
       return new NormalExam(payload.classifyId, payload.types, payload.count)

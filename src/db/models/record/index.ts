@@ -1,10 +1,7 @@
-import { IQuestion } from '@/db/models/question/types';
 import { IRecord } from './types';
 
 export class Record implements IRecord {
   id!: number
-  questions: IQuestion[] = []
-  wrongQuestions: IQuestion[] = []
 
   constructor(
     public classifyId: number,

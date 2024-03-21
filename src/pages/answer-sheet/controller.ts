@@ -1,16 +1,16 @@
 import { AppDatabase } from '@/db'
-import { ExamController, ExamState } from '@/services/exam-controller/types'
-import { ExamControllerConfig, genExamController } from '@/services/exam-controller'
+import { ExamService, ExamState } from '@/services/exam-service/types'
+import { ExamServiceConfig, newExamService } from '@/services/exam-service'
 import { useDatabase } from '@/stores/use-database'
 
 export class AnswerSheetController {
-  constructor(config: ExamControllerConfig) {
-    this.examController = genExamController(config)
+  constructor(config: ExamServiceConfig) {
+    this.examController = newExamService(config)
     this.db = useDatabase.getState().db
   }
 
   private db: AppDatabase
-  private examController!: ExamController // 从fromConfig来的会有examController？
+  private examController!: ExamService // 从fromConfig来的会有examController？
   get showInfo() { return this.examController.showInfo }
   get showAnswer() { return this.examController.showAnswer }
   get questions() { return this.examController.questions }

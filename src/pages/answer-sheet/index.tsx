@@ -8,10 +8,10 @@ import { RouterName } from '@/router/types'
 import { AnswerSheetController } from '@/pages/answer-sheet/controller'
 import AnswerSheetProvider from '@/pages/answer-sheet/context'
 import { useMounted } from '@/hooks/use-mounted'
-import { ExamControllerConfig } from '@/services/exam-controller'
+import { ExamServiceConfig } from '@/services/exam-service'
 import SelectQuizCard from '@/pages/answer-sheet/cards/SelectQuizCard/index'
 import ResultCard from '@/pages/answer-sheet/cards/ResultCard'
-import { ExamState } from '@/services/exam-controller/types'
+import { ExamState } from '@/services/exam-service/types'
 import { useCardList } from '@/pages/answer-sheet/use-card-list'
 import { ArrowCircleDown, ArrowCircleUp } from '@mui/icons-material'
 
@@ -19,7 +19,7 @@ import { ArrowCircleDown, ArrowCircleUp } from '@mui/icons-material'
  * todo start之后，end之前，window.unload要加拦截
  */
 const AnswerSheet = () => {
-  const location: Location<ExamControllerConfig> = useLocation();
+  const location: Location<ExamServiceConfig> = useLocation();
   const navigate = useNavigate()
   const theme = useTheme()
 

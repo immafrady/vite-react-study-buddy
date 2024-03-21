@@ -3,7 +3,7 @@ import Box from '@mui/material/Box'
 import { useNavigate } from 'react-router-dom'
 import { RouterName } from '@/router/types'
 import { ExamConfigState } from '@/pages/exam-config/types'
-import { ExamType } from '@/services/exam-controller/types'
+import { ExamType } from '@/services/exam-service/types'
 import { resourceBasename } from '@/helpers/project'
 
 const Home = () => {

@@ -1,11 +1,10 @@
-import { ExamController, ExamState } from '@/services/exam-controller/types'
-import { IRecord } from '@/db/models/record/types'
+import { ExamService, ExamState } from '../types'
 import { AppDatabase } from '@/db'
 import { useDatabase } from '@/stores/use-database'
-import { IQuestion } from '@/db/models/question/types'
 import { Record } from '@/db/models/record'
+import { Question } from '@/db/models/question'
 
-export class ReviewExam implements ExamController {
+export class ReviewExam implements ExamService {
   constructor(
     private recordId: number,
   ) {}
@@ -16,7 +15,7 @@ export class ReviewExam implements ExamController {
 
   private db: AppDatabase = useDatabase.getState().db
   record!: Record
-  questions: IQuestion[] = []
+  questions: Question[] = []
 
   async newRecord() {
     this.record = (await this.db.records.get(this.recordId))! as Record
