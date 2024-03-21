@@ -4,17 +4,14 @@ import {
   Button,
   Checkbox,
   Container,
-  Divider,
   FormControl,
   FormControlLabel,
   FormGroup,
   InputLabel,
   MenuItem,
-  Paper,
   Select,
   Stack,
   TextField,
-  Typography,
 } from '@mui/material'
 import { ExamConfigState } from '@/pages/exam-config/types'
 import React from 'react'
@@ -24,6 +21,7 @@ import Box from '@mui/material/Box'
 import { QuestionType } from '@/db/models/question/types'
 import { RouterName } from '@/router/types'
 import { ExamServiceConfig } from '@/services/exam-service'
+import CommonPaper from '@/components/CommonPaper'
 
 const ExamConfig = () => {
   const navigate = useNavigate()
@@ -41,13 +39,9 @@ const ExamConfig = () => {
 
   const onCountChange = (event: any, value: any) => setForm({ ...form, count: value as string })
 
-  return <Paper sx={{ p: { xs: 1, sm: 2, md: 3, lg: 4, xl: 5 }, minWidth: 'sm' }}>
-    <Typography variant={'h5'}>{ location.state?.modeName }</Typography>
-    <Typography variant={'body2'}>{ location.state?.modeExplain }</Typography>
-    <Divider sx={{ marginTop: { xs: 1, sm: 2, md: 3, lg: 4, xl: 5 }, marginBottom: { xs: 4, sm: 5, md: 6, lg: 7, xl: 8 } }}/>
+  return <CommonPaper title={location.state?.modeName} subtitle={location.state?.modeExplain}>
     <Container maxWidth={'sm'}>
       <Stack spacing={2}>
-
         <FormControl fullWidth>
           <InputLabel id="classify-id-select-label">请选择题目类别</InputLabel>
           <Select<number|string>
@@ -71,16 +65,16 @@ const ExamConfig = () => {
             { typeOptions?.map((item, idx) => <FormControlLabel
               key={idx}
               control={
-              <Checkbox
-                checked={form.types.includes(item)}
-                onChange={(event) => {
-                  if (event.target.checked) {
-                    setForm({ ...form, types: [...form.types, item]})
-                  } else {
-                    setForm({ ...form, types: form.types.filter(type => type !== item)})
-                  }
-                }}
-              />}
+                <Checkbox
+                  checked={form.types.includes(item)}
+                  onChange={(event) => {
+                    if (event.target.checked) {
+                      setForm({ ...form, types: [...form.types, item]})
+                    } else {
+                      setForm({ ...form, types: form.types.filter(type => type !== item)})
+                    }
+                  }}
+                />}
               label={item}/>
             ) }
           </FormGroup>
@@ -107,7 +101,7 @@ const ExamConfig = () => {
         }}>下一步</Button>
       </Stack>
     </Container>
-  </Paper>
+  </CommonPaper>
 }
 
 export default ExamConfig
