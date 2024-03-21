@@ -1,7 +1,8 @@
 import { ExamService, ExamType } from './types'
 import { QuestionType } from '@/db/models/question/types'
-import { NormalExam } from './exams/normal'
-import { ReviewExam } from './exams/review'
+import { NormalES } from './exams/normal'
+import { ReviewES } from './exams/review'
+import { ExamES } from '@/services/exam-service/exams/exam'
 
 export type ExamServiceConfig = {
   type: ExamType.Normal | ExamType.Exam
@@ -16,10 +17,10 @@ export type ExamServiceConfig = {
 export const newExamService = (payload: ExamServiceConfig): ExamService => {
   switch (payload.type) {
     case ExamType.Normal:
-      return new NormalExam(payload.classifyId, payload.types, payload.count)
-    case ExamType.Exam: // todo
-      return new NormalExam(payload.classifyId, payload.types, payload.count)
+      return new NormalES(payload.classifyId, payload.types, payload.count)
+    case ExamType.Exam:
+      return new ExamES(payload.classifyId, payload.types, payload.count)
     case ExamType.Review:
-      return new ReviewExam(payload.recordId)
+      return new ReviewES(payload.recordId)
   }
 }

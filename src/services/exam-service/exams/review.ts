@@ -3,8 +3,9 @@ import { AppDatabase } from '@/db'
 import { useDatabase } from '@/stores/use-database'
 import { Record } from '@/db/models/record'
 import { Question } from '@/db/models/question'
+import { RecordType } from '@/db/models/record/types'
 
-export class ReviewExam implements ExamService {
+export class ReviewES implements ExamService {
   constructor(
     private recordId: number,
   ) {}
@@ -18,7 +19,9 @@ export class ReviewExam implements ExamService {
   questions: Question[] = []
 
   async newRecord() {
-    this.record = (await this.db.records.get(this.recordId))! as Record
+    const record = (await this.db.records.get(this.recordId))! as Record
+    this.record = new Record(record.classifyId, RecordType.Review, record.questionIds, [], [], new Date)
+    this.record.id = await this.db.records.add(this.record.toDBJson())
   }
 
   async loadQuestions() {

@@ -6,8 +6,9 @@ import { Record } from '@/db/models/record'
 import questionsOp from '@/services/data-operations/questions';
 import { pick, shuffle } from '@/helpers/array'
 import { Question } from '@/db/models/question'
+import { RecordType } from '@/db/models/record/types'
 
-export class NormalExam implements ExamService {
+export class NormalES implements ExamService {
   constructor(
     private classifyId: number,
     private types: QuestionType[],
@@ -24,7 +25,7 @@ export class NormalExam implements ExamService {
   questions: Question[] = []
 
   async newRecord() {
-    this.record = new Record(this.classifyId, [], [], [],new Date())
+    this.record = new Record(this.classifyId, RecordType.Normal, [], [], [],new Date())
     this.record.id = await this.db.records.add(this.record.toDBJson())
   }
 

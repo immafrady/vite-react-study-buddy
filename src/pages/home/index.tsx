@@ -11,7 +11,7 @@ const Home = () => {
   return <Grid container spacing={2}>
       { [{
         title: '开始做题',
-        desc: '随便刷刷，从做的少的题目开始',
+        desc: '随便刷刷咯',
         action: () => {
           navigate(RouterName.ExamConfig, {
             state: {
@@ -27,9 +27,15 @@ const Home = () => {
         }
       }, {
         title: '考试模式',
-        desc: '来一场痛痛快快都决斗吧！',
+        desc: '来一场痛快的决斗吧！',
         action: () => {
-
+          navigate(RouterName.ExamConfig, {
+            state: {
+              modeName: '考试模式',
+              modeExplain: '选择参数后开始刷题，一口气做完后再看答案噢～',
+              type: ExamType.Exam,
+            }
+          })
         },
         background: {
           x: 380,
@@ -63,7 +69,7 @@ const Home = () => {
           >
             <Box sx={{ flexGrow: 1 }}>
               <CardHeader title={item.title}/>
-              <CardContent><Typography variant={'body1'}>{item.desc}</Typography></CardContent>
+              <CardContent><Typography variant={'body2'}>{item.desc}</Typography></CardContent>
               <CardActions>
                 <Button variant={'text'} onClick={() => item.action()}>START</Button>
               </CardActions>
