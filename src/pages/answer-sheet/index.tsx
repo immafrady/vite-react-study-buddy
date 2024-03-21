@@ -81,7 +81,6 @@ const AnswerSheet = () => {
             if (isFirst) { // 第一个要减半
               isFirst = false
               height += offsetHeight / 2
-              console.log('height: ', offsetHeight)
               setViewH(offsetHeight)
             } else {
               height += offsetHeight + parseFloat(getComputedStyle(children[i]).marginTop)
@@ -143,7 +142,7 @@ const AnswerSheet = () => {
           bottom: 0,
           left: 0,
           right: 0,
-          height: `calc((100vh - ${theme.mixins.toolbar.minHeight}px - ${viewH}px) / 2 - ${theme.mixins.toolbar.minHeight}px)`,
+          height: `calc((100vh - ${theme.mixins.toolbar.minHeight}px - ${viewH}px) / 2)`,
           background: `linear-gradient(to bottom, transparent, ${theme.palette.background.paper} 50%)`,
         }}>
           {examState === ExamState.Finish && <Stack flexDirection={'row'} justifyContent={'center'} gap={5} sx={{
