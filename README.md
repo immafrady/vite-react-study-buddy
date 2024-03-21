@@ -1,39 +1,24 @@
-# Material UI - Vite.js in TypeScript example
+# 学习搭档
 
-## How to use
+基于React+MUI的刷题小站  
+使用indexeddb储存记录
 
-Download the example [or clone the repo](https://github.com/mui/material-ui):
+访问在线站点： [https://immafrady.github.io/vite-react-study-buddy/](https://immafrady.github.io/vite-react-study-buddy/)
 
-<!-- #default-branch-switch -->
+## 支持科目
 
-```bash
-curl https://codeload.github.com/mui/material-ui/tar.gz/master | tar -xz --strip=2 material-ui-master/examples/material-ui-vite-ts
-cd material-ui-vite-ts
-```
+- [x] 马克思主义基本原理
+- [ ] 中国近现代史纲要
 
-Install it and run:
+## 支持模式
 
-```bash
-npm install
-npm run dev
-```
+- [x] 普通刷题
+- [x] 考试模式
+- [ ] 复习模式
+- [ ] 做心标题
+- [ ] 浏览历史
+- [ ] 重做历史
 
-or:
+### 特别鸣谢
 
-<!-- #default-branch-switch -->
-
-[![Edit on StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/mui/material-ui/tree/master/examples/material-ui-vite-ts)
-
-[![Edit on CodeSandbox](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/p/sandbox/github/mui/material-ui/tree/master/examples/material-ui-vite-ts)
-
-## The idea behind the example
-
-This example uses [Vite.js](https://github.com/vitejs/vite).
-It includes `@mui/material` and its peer dependencies, including [Emotion](https://emotion.sh/docs/introduction), the default style engine in Material UI v5.
-
-## What's next?
-
-<!-- #default-branch-switch -->
-
-You now have a working example project.
-You can head back to the documentation and continue by browsing the [templates](https://mui.com/material-ui/getting-started/templates/) section.
+- [马克思题库(github)](https://github.com/Ylarod/do_my_marx/tree/main)
