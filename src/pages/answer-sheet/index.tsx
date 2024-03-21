@@ -14,6 +14,7 @@ import ResultCard from '@/pages/answer-sheet/cards/ResultCard'
 import { ExamState } from '@/services/exam-service/types'
 import { useCardList } from '@/pages/answer-sheet/use-card-list'
 import { ArrowCircleDown, ArrowCircleUp } from '@mui/icons-material'
+import { useSwipeEvent } from '@/hooks/use-swipe-event'
 
 const AnswerSheet = () => {
   const location: Location<ExamServiceConfig> = useLocation();
@@ -94,8 +95,22 @@ const AnswerSheet = () => {
     }
   }, [cardListState.page])
 
+  // 在查看模式下，上下滑动可以切换卡片
+  const touches = useSwipeEvent({
+    onSwipeUp: () => {
+      if (examState === ExamState.Finish) {
+        cardListDispatch({ type: 'move-up' })
+      }
+    },
+    onSwipeDown: () => {
+      if (examState === ExamState.Finish) {
+        cardListDispatch({ type: 'move-down' })
+      }
+    },
+  })
+
   return <AnswerSheetProvider value={controller}>
-    <Box sx={{ position: 'relative', height: '100%', overflowY: 'visible', overflowX: 'visible' }}>
+    <Box {...touches} sx={{ position: 'relative', height: '100%', overflowY: 'visible', overflowX: 'visible' }}>
       <Stack ref={stackRef} spacing={2} justifyContent={'flex-end'} sx={{
         position: 'absolute',
         width: '100%',

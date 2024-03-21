@@ -2,6 +2,7 @@ import { AppDatabase } from '@/db'
 import { loadMarxData } from '@/services/subjects/marx/load-data'
 import { create } from 'zustand'
 import { combine } from 'zustand/middleware'
+import { loadChineseModernHistoryData } from '@/services/subjects/chinese-modern-history/load-data'
 
 export enum InitState {
   BeforeInit,
@@ -39,6 +40,7 @@ export const useDatabase = create<{
       }
       // 初始化数据库代码！
       await loadMarxData(state.db)
+      await loadChineseModernHistoryData(state.db)
       useDatabase.setState({ initState: InitState.Initialized })
     } catch (e) {
       console.error(e)

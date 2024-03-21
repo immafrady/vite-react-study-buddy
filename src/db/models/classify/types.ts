@@ -7,5 +7,6 @@ export interface IClassify {
 }
 
 export enum ClassName {
-  Marx = '马克思主义基本原理'
+  Marx = '马克思主义基本原理',
+  ChineseModernHistory = '中国近现代史纲要'
 }

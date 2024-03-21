@@ -1,10 +1,21 @@
-import { Button, Card, CardActions, CardContent, CardHeader, CardMedia, Grid, Typography } from '@mui/material'
+import {
+  Card,
+  CardActions,
+  CardContent,
+  CardHeader,
+  CardMedia,
+  Grid,
+  IconButton,
+  Typography,
+} from '@mui/material'
 import Box from '@mui/material/Box'
 import { useNavigate } from 'react-router-dom'
 import { RouterName } from '@/router/types'
 import { ExamConfigState } from '@/pages/exam-config/types'
 import { ExamType } from '@/services/exam-service/types'
 import { resourceBasename } from '@/helpers/project'
+import { ArrowCircleRightOutlined } from '@mui/icons-material'
+import React from 'react'
 
 const Home = () => {
   const navigate = useNavigate()
@@ -55,7 +66,7 @@ const Home = () => {
         title: '历史记录',
         desc: '看看曾经都做过些什么',
         action: () => {
-
+          navigate(RouterName.RecordList)
         },
         background: {
           x: 750,
@@ -71,7 +82,7 @@ const Home = () => {
               <CardHeader title={item.title}/>
               <CardContent><Typography variant={'body2'}>{item.desc}</Typography></CardContent>
               <CardActions>
-                <Button variant={'text'} onClick={() => item.action()}>START</Button>
+                <IconButton color={'primary'} onClick={() => item.action()}><ArrowCircleRightOutlined/></IconButton>
               </CardActions>
             </Box>
             <CardMedia sx={{ width: 170, minWidth: 170, height: 170,  background: `url('${resourceBasename}/images/cats.jpeg') -${item.background.x}px -${item.background.y}px` }} component={'div'} />

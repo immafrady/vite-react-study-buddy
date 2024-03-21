@@ -9,7 +9,7 @@ const Layout = () => {
     let bestMatch = matches[matches.length - 1];
     const theme = useTheme()
     // theme switcher
-    return <Box>
+    return <Box sx={{ overflow: 'hidden' }}>
         <AppBar component={'nav'} position="sticky">
             <Toolbar>
                 <Typography

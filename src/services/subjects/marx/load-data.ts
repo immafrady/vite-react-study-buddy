@@ -1,75 +1,10 @@
+import { loadJsonData } from '@/services/subjects/load-json-data'
 import { AppDatabase } from '@/db'
 import { ClassName } from '@/db/models/classify/types'
-import { Classify } from '@/db/models/classify'
-import { Question } from '@/db/models/question'
 import { QuestionType } from '@/db/models/question/types'
-import { resourceBasename } from '@/helpers/project'
 
-export interface JudgeQuestion {
-  problem: string
-  answer: string
-}
-
-export interface SelectQuestion {
-  problem: string
-  answer: string
-  A: string
-  B: string
-  C: string
-  D: string
-}
-
-async function loadJson<T>(type: string): Promise<T[]> {
-  const resp = await fetch(`${resourceBasename}/data/marx/${type}.json`, { method: 'get' })
-  return await resp.json() as T[]
-}
-
-const selectQuestionParser = (source: SelectQuestion) => {
-  return {
-    A: source.A,
-    B: source.B,
-    C: source.C,
-    D: source.D,
-  }
-}
-
-
-export const loadMarxData = async (db: AppDatabase) => {
-  const marx = await db.classifies.where({ name: ClassName.Marx }).first()
-  if (!marx) {
-    const classify = new Classify(ClassName.Marx, [QuestionType.Judge, QuestionType.Single, QuestionType.Multiple])
-    const classifyId = await db.classifies.add(classify.toDBJson())
-
-    const [judges, singles, multiples] = await Promise.all([
-      loadJson<JudgeQuestion>('judge'),
-      loadJson<SelectQuestion>('single'),
-      loadJson<SelectQuestion>('multiple'),
-    ])
-
-    db.transaction('rw', db.questions, async () => {
-      db.questions.bulkAdd(judges.map((judge) => new Question(
-        classifyId,
-        judge.problem,
-        judge.answer,
-        null,
-        QuestionType.Judge
-        ).toDBJson()))
-      db.questions.bulkAdd(singles.map((single) => new Question(
-        classifyId,
-        single.problem,
-        single.answer,
-        selectQuestionParser(single),
-        QuestionType.Single
-      ).toDBJson()))
-      db.questions.bulkAdd(multiples.map((multiple) => new Question(
-        classifyId,
-        multiple.problem,
-        multiple.answer,
-        selectQuestionParser(multiple),
-        QuestionType.Multiple
-      ).toDBJson()))
-    }).catch((reason) => {
-      console.error(reason)
-    })
-  }
-}
+export const loadMarxData = (db: AppDatabase) => loadJsonData(db, {
+  name: ClassName.Marx,
+  types: [QuestionType.Judge, QuestionType.Multiple, QuestionType.Single],
+  basePath: 'marx'
+})
