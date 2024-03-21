@@ -1,4 +1,4 @@
-import { IconButton, Slide, Stack, useTheme } from '@mui/material'
+import { IconButton, Slide, Stack, Typography, useTheme } from '@mui/material'
 import React from 'react'
 import { Location, useLocation, useNavigate } from 'react-router-dom'
 import { TransitionGroup } from 'react-transition-group'
@@ -145,13 +145,16 @@ const AnswerSheet = () => {
           height: `calc((100vh - ${theme.mixins.toolbar.minHeight}px - ${viewH}px) / 2)`,
           background: `linear-gradient(to bottom, transparent, ${theme.palette.background.paper} 50%)`,
         }}>
-          {examState === ExamState.Finish && <Stack flexDirection={'row'} justifyContent={'center'} gap={5} sx={{
+          {examState === ExamState.Finish && <Stack alignItems={'center'} sx={{
             position: 'absolute',
             width: '100%',
             bottom: {xs: 5, sm: 10, md: 15, lg: 20, xl: 25},
           }}>
-            <IconButton color={'secondary'} size={'large'} onClick={() => cardListDispatch({type: 'move-down'})}><ArrowCircleUp/></IconButton>
-            <IconButton color={'secondary'} size={'large'} onClick={() => cardListDispatch({type: 'move-up'})}><ArrowCircleDown/></IconButton>
+            <Typography variant={'body2'} color={'text.secondary'}>上下翻阅记录</Typography>
+            <Stack flexDirection={'row'} justifyContent={'center'} gap={5}>
+              <IconButton color={'secondary'} size={'large'} onClick={() => cardListDispatch({type: 'move-down'})}><ArrowCircleUp/></IconButton>
+              <IconButton color={'secondary'} size={'large'} onClick={() => cardListDispatch({type: 'move-up'})}><ArrowCircleDown/></IconButton>
+            </Stack>
           </Stack>}
         </Box>
       </> }
