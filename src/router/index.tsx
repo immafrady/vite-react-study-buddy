@@ -4,6 +4,7 @@ import Home from '@/pages/home'
 import ExamConfig from '@/pages/exam-config'
 import { RouterName } from '@/router/types'
 import AnswerSheet from '@/pages/answer-sheet'
+import RecordList from '@/pages/record-list'
 
 const router = createHashRouter([{
     element: <Layout />,
@@ -16,6 +17,9 @@ const router = createHashRouter([{
     }, {
         path: RouterName.AnswerSheet,
         element: <AnswerSheet />
+    }, {
+        path: RouterName.RecordList,
+        element: <RecordList />
     }]
 }])
 export default router;
