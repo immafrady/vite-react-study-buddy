@@ -1,4 +1,4 @@
-import { IconButton, Slide, Stack, useTheme } from '@mui/material'
+import { IconButton, Slide, Stack, Typography, useTheme } from '@mui/material'
 import React from 'react'
 import { Location, useLocation, useNavigate } from 'react-router-dom'
 import { TransitionGroup } from 'react-transition-group'
@@ -8,18 +8,15 @@ import { RouterName } from '@/router/types'
 import { AnswerSheetController } from '@/pages/answer-sheet/controller'
 import AnswerSheetProvider from '@/pages/answer-sheet/context'
 import { useMounted } from '@/hooks/use-mounted'
-import { ExamControllerConfig } from '@/services/exam-controller'
+import { ExamServiceConfig } from '@/services/exam-service'
 import SelectQuizCard from '@/pages/answer-sheet/cards/SelectQuizCard/index'
 import ResultCard from '@/pages/answer-sheet/cards/ResultCard'
-import { ExamState } from '@/services/exam-controller/types'
+import { ExamState } from '@/services/exam-service/types'
 import { useCardList } from '@/pages/answer-sheet/use-card-list'
 import { ArrowCircleDown, ArrowCircleUp } from '@mui/icons-material'
 
-/**
- * todo start之后，end之前，window.unload要加拦截
- */
 const AnswerSheet = () => {
-  const location: Location<ExamControllerConfig> = useLocation();
+  const location: Location<ExamServiceConfig> = useLocation();
   const navigate = useNavigate()
   const theme = useTheme()
 
@@ -81,7 +78,6 @@ const AnswerSheet = () => {
             if (isFirst) { // 第一个要减半
               isFirst = false
               height += offsetHeight / 2
-              console.log('height: ', offsetHeight)
               setViewH(offsetHeight)
             } else {
               height += offsetHeight + parseFloat(getComputedStyle(children[i]).marginTop)
@@ -143,16 +139,19 @@ const AnswerSheet = () => {
           bottom: 0,
           left: 0,
           right: 0,
-          height: `calc((100vh - ${theme.mixins.toolbar.minHeight}px - ${viewH}px) / 2 - ${theme.mixins.toolbar.minHeight}px)`,
+          height: `calc((100vh - ${theme.mixins.toolbar.minHeight}px - ${viewH}px) / 2)`,
           background: `linear-gradient(to bottom, transparent, ${theme.palette.background.paper} 50%)`,
         }}>
-          {examState === ExamState.Finish && <Stack flexDirection={'row'} justifyContent={'center'} gap={5} sx={{
+          {examState === ExamState.Finish && <Stack alignItems={'center'} sx={{
             position: 'absolute',
             width: '100%',
             bottom: {xs: 5, sm: 10, md: 15, lg: 20, xl: 25},
           }}>
-            <IconButton color={'secondary'} size={'large'} onClick={() => cardListDispatch({type: 'move-down'})}><ArrowCircleUp/></IconButton>
-            <IconButton color={'secondary'} size={'large'} onClick={() => cardListDispatch({type: 'move-up'})}><ArrowCircleDown/></IconButton>
+            <Typography variant={'body2'} color={'text.secondary'}>上下翻阅记录</Typography>
+            <Stack flexDirection={'row'} justifyContent={'center'} gap={5}>
+              <IconButton color={'secondary'} size={'large'} onClick={() => cardListDispatch({type: 'move-down'})}><ArrowCircleUp/></IconButton>
+              <IconButton color={'secondary'} size={'large'} onClick={() => cardListDispatch({type: 'move-up'})}><ArrowCircleDown/></IconButton>
+            </Stack>
           </Stack>}
         </Box>
       </> }

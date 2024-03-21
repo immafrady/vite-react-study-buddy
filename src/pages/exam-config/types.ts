@@ -1,4 +1,4 @@
-import { ExamType } from '@/services/exam-controller/types'
+import { ExamType } from '@/services/exam-service/types'
 
 export interface ExamConfigState {
   modeName: string

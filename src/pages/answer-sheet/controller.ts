@@ -1,22 +1,22 @@
 import { AppDatabase } from '@/db'
-import { ExamController, ExamState } from '@/services/exam-controller/types'
-import { ExamControllerConfig, genExamController } from '@/services/exam-controller'
+import { ExamService, ExamState } from '@/services/exam-service/types'
+import { ExamServiceConfig, newExamService } from '@/services/exam-service'
 import { useDatabase } from '@/stores/use-database'
 
 export class AnswerSheetController {
-  constructor(config: ExamControllerConfig) {
-    this.examController = genExamController(config)
+  constructor(config: ExamServiceConfig) {
+    this.examService = newExamService(config)
     this.db = useDatabase.getState().db
   }
 
   private db: AppDatabase
-  private examController!: ExamController // 从fromConfig来的会有examController？
-  get showInfo() { return this.examController.showInfo }
-  get showAnswer() { return this.examController.showAnswer }
-  get questions() { return this.examController.questions }
+  private examService!: ExamService // 从fromConfig来的会有examController？
+  get showInfo() { return this.examService.showInfo }
+  get showAnswer() { return this.examService.showAnswer }
+  get questions() { return this.examService.questions }
   get score() {
-    const doneCount = this.examController.record.questionIds.length
-    const rightCount = doneCount - this.examController.record.wrongQuestionIds.length
+    const doneCount = this.examService.record.questionIds.length
+    const rightCount = doneCount - this.examService.record.wrongQuestionIds.length
     return Math.floor(rightCount / doneCount * 100)
   }
 
@@ -24,27 +24,27 @@ export class AnswerSheetController {
   async start() {
     if (!this.isStarted) {
       this.isStarted = true
-      await this.examController.newRecord()
-      await this.examController.loadQuestions()
+      await this.examService.newRecord()
+      await this.examService.loadQuestions()
     }
   }
 
   async updateRecord(questionId: number, answer: string, isCorrect: boolean) {
-    this.examController.record.questionIds.push(questionId)
-    this.examController.record.questionAnswers.push(answer)
+    this.examService.record.questionIds.push(questionId)
+    this.examService.record.questionAnswers.push(answer)
     if (!isCorrect) {
-      this.examController.record.wrongQuestionIds.push(questionId)
+      this.examService.record.wrongQuestionIds.push(questionId)
     }
-    await this.db.records.update(this.examController.record.id, {
-      wrongQuestionIds: this.examController.record.wrongQuestionIds,
-      questionAnswers: this.examController.record.questionAnswers,
-      questionIds: this.examController.record.questionIds,
+    await this.db.records.update(this.examService.record.id, {
+      wrongQuestionIds: this.examService.record.wrongQuestionIds,
+      questionAnswers: this.examService.record.questionAnswers,
+      questionIds: this.examService.record.questionIds,
       updateDate: new Date()
     })
   }
 
   // 推进到下一个状态
   setExamState(state: ExamState) {
-    this.examController.state = state
+    this.examService.state = state
   }
 }

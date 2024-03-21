@@ -1,9 +1,10 @@
-import { IQuestion, QuestionType } from '@/db/models/question/types'
+import { QuestionType } from '@/db/models/question/types'
 import { ClassName, IClassify } from './types';
+import { Question } from '@/db/models/question'
 
 export class Classify implements IClassify {
   id!: number
-  questions: IQuestion[] = []
+  questions: Question[] = []
 
   constructor(
     public name: ClassName,

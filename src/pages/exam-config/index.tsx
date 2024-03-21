@@ -23,13 +23,12 @@ import { useLiveQuery } from 'dexie-react-hooks'
 import Box from '@mui/material/Box'
 import { QuestionType } from '@/db/models/question/types'
 import { RouterName } from '@/router/types'
-import { ExamControllerConfig } from '@/services/exam-controller'
-import { ExamType } from '@/services/exam-controller/types'
+import { ExamServiceConfig } from '@/services/exam-service'
 
 const ExamConfig = () => {
   const navigate = useNavigate()
   const location: Location<ExamConfigState> = useLocation()
-  const { db, initState } = useDatabase()
+  const { db} = useDatabase()
   const classifies = useLiveQuery(() => {
     return db.classifies.toArray()
   })
@@ -62,7 +61,7 @@ const ExamConfig = () => {
               setTypeOptions(target?.questionTypes || [])
             }}
           >
-            { classifies?.map(item => <MenuItem value={item.id} dense>{item.name}</MenuItem>) }
+            { classifies?.map((item, idx) => <MenuItem key={idx} value={item.id} dense>{item.name}</MenuItem>) }
           </Select>
         </FormControl>
 
@@ -102,8 +101,8 @@ const ExamConfig = () => {
               classifyId: +form.classifyId,
               types: form.types,
               count: +form.count,
-              type: ExamType.Normal
-            } as ExamControllerConfig
+              type: location.state?.type
+            } as ExamServiceConfig
           })
         }}>下一步</Button>
       </Stack>

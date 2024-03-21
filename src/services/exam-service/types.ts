@@ -1,5 +1,5 @@
-import { IRecord } from '@/db/models/record/types'
-import { IQuestion } from '@/db/models/question/types'
+import { Record } from '@/db/models/record'
+import { Question } from '@/db/models/question'
 
 export enum ExamType {
   Normal, // 普通模式
@@ -13,10 +13,10 @@ export enum ExamState {
   Finish // 结束
 }
 
-export interface ExamController {
+export interface ExamService {
   state: ExamState
-  record: IRecord
-  questions: IQuestion[]
+  record: Record
+  questions: Question[]
   // 特定的配置
   showInfo: boolean // 展示题目相关信息
   showAnswer: boolean // 展示答案
