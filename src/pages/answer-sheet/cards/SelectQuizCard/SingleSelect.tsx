@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react'
-import { FormControl, FormControlLabel, Radio, RadioGroup, Typography } from '@mui/material'
+import { FormControlLabel, Radio, RadioGroup, Typography } from '@mui/material'
 
 const SingleSelect: React.FC<{
   options: { [value: string]: string }

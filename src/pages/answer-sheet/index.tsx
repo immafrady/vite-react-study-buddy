@@ -15,9 +15,6 @@ import { ExamState } from '@/services/exam-service/types'
 import { useCardList } from '@/pages/answer-sheet/use-card-list'
 import { ArrowCircleDown, ArrowCircleUp } from '@mui/icons-material'
 
-/**
- * todo start之后，end之前，window.unload要加拦截
- */
 const AnswerSheet = () => {
   const location: Location<ExamServiceConfig> = useLocation();
   const navigate = useNavigate()

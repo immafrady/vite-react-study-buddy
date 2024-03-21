@@ -5,10 +5,3 @@ export interface CommonCard extends CardProps {
   inactive?: boolean
   onNext: () => void
 }
-
-export enum CardType {
-  StartCard,
-  SelectQuizCard,
-  ResultCard
-}
-

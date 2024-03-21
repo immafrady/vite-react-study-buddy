@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react'
-import { Checkbox, FormControl, FormControlLabel, FormGroup, Typography } from '@mui/material'
+import { Checkbox, FormControlLabel, FormGroup, Typography } from '@mui/material'
 
 const MultipleSelect: React.FC<{
   options: { [value: string]: string }
