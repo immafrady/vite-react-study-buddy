@@ -5,7 +5,7 @@ import { Button, Card, CardActions, CardContent, Typography } from '@mui/materia
 import { useNavigate } from 'react-router-dom'
 import { RouterName } from '@/router/types'
 
-const ResultCard: React.FC<CommonCard> = React.forwardRef(({ ...cardProps }, ref) => {
+const ResultCard: React.FC<CommonCard> = React.forwardRef(({ onNext, ...cardProps }, ref) => {
     const navigate = useNavigate()
     const controller = React.useContext(AnswerSheetContext)
 
@@ -25,8 +25,11 @@ const ResultCard: React.FC<CommonCard> = React.forwardRef(({ ...cardProps }, ref
             '#66FF00'
         ]
         let result = ''
-        for (let i = 0; i < palette.length && controller?.score! > i*10; i++) {
+        for (let i = 0; i < palette.length; i++) {
             result = palette[i]
+            if (controller?.score! <= i*10) {
+                break
+            }
         }
         return result
     }, [controller?.score])
