@@ -1,10 +1,11 @@
-import { IRecord } from './types';
+import { IRecord, RecordType } from './types'
 
 export class Record implements IRecord {
   id!: number
 
   constructor(
     public classifyId: number,
+    public type: RecordType,
     public questionIds: number[],
     public wrongQuestionIds: number[],
     public questionAnswers: string[],
@@ -16,6 +17,7 @@ export class Record implements IRecord {
     return {
       id: this.id,
       classifyId: this.classifyId,
+      type: this.type,
       questionIds: this.questionIds,
       wrongQuestionIds: this.wrongQuestionIds,
       questionAnswers: this.questionAnswers,
