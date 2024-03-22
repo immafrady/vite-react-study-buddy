@@ -15,9 +15,7 @@ export class AnswerSheetController {
   get showAnswer() { return this.examService.showAnswer }
   get questions() { return this.examService.questions }
   get score() {
-    const doneCount = this.examService.record.questionIds.length
-    const rightCount = doneCount - this.examService.record.wrongQuestionIds.length
-    return Math.floor(rightCount / doneCount * 100)
+    return this.examService.record.score
   }
 
   private isStarted = false

@@ -4,34 +4,14 @@ import { AnswerSheetContext } from '@/pages/answer-sheet/context'
 import { Button, Card, CardActions, CardContent, Typography } from '@mui/material'
 import { useNavigate } from 'react-router-dom'
 import { RouterName } from '@/router/types'
+import { getScoreColor } from '@/helpers/score-palette'
 
 const ResultCard: React.FC<CommonCard> = React.forwardRef(({ onNext, ...cardProps }, ref) => {
     const navigate = useNavigate()
     const controller = React.useContext(AnswerSheetContext)
 
     const color = React.useMemo(() => {
-        const palette = [
-            '#FF0000',
-            '#F11700',
-            '#E32E00',
-            '#D54600',
-            '#C75D00',
-            '#B97400',
-            '#AC8B00',
-            '#9EA200',
-            '#90B900',
-            '#82D100',
-            '#74E800',
-            '#66FF00'
-        ]
-        let result = ''
-        for (let i = 0; i < palette.length; i++) {
-            result = palette[i]
-            if (controller?.score! <= i*10) {
-                break
-            }
-        }
-        return result
+        return getScoreColor(controller?.score!)
     }, [controller?.score])
     return <Card ref={ref} {...cardProps} >
         <CardContent>
