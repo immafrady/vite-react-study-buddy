@@ -97,7 +97,7 @@ const Home = () => {
       <List disablePadding>
         <ListSubheader disableSticky>请选择你的模式</ListSubheader>
         { modeList.map((item, idx) => <>
-          <ListItem key={idx} disableGutters>
+          <ListItem key={item.title} disableGutters>
             <ListItemButton onClick={item.action}>
               <ListItemAvatar><Avatar sx={{ bgcolor: isLightTheme ? item.color : '' }}>
                 { React.createElement(item.icon) }
@@ -105,11 +105,11 @@ const Home = () => {
               <ListItemText primary={item.title} secondary={item.desc} />
             </ListItemButton>
           </ListItem>
-          { idx !== modeList.length - 1 && <Divider variant={'middle'} component="li" /> }
+          { idx !== modeList.length - 1 && <Divider key={item.title + idx} variant={'middle'} component="li" /> }
         </>) }
         <ListSubheader disableSticky>其他</ListSubheader>
         { otherList.map((item, idx) => <>
-          <ListItem disableGutters>
+          <ListItem key={item.title} disableGutters>
             <ListItemButton onClick={item.action}>
               <ListItemAvatar><Avatar sx={{ bgcolor: isLightTheme ? item.color : '' }}>
                 { React.createElement(item.icon) }
@@ -118,7 +118,7 @@ const Home = () => {
               <ListItemText primary={item.title}></ListItemText>
             </ListItemButton>
           </ListItem>
-          { idx !== otherList.length - 1 && <Divider variant={'middle'} component="li" /> }
+          { idx !== otherList.length - 1 && <Divider key={item.title + idx} variant={'middle'} component="li" /> }
         </>) }
       </List>
     </Box>

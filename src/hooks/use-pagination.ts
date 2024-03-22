@@ -39,6 +39,8 @@ const getCurrent = <T>(raw: T[], page: number, size: number) => {
 }
 
 export const usePagination = <T>(data: T[] = [], defaultSize: number = 10) => {
+  // todo data的值无法及时更新拿到
+  const storedData = React.useMemo(() => data, [data])
   const [state, dispatch] = React.useReducer((state: State<T>, action: Actions<T>) => {
     switch (action.type) {
       case 'reset-data':
@@ -77,7 +79,7 @@ export const usePagination = <T>(data: T[] = [], defaultSize: number = 10) => {
       }
 
     }
-  }, { data, defaultSize }, ({ data, defaultSize }) => {
+  }, { data: storedData, defaultSize }, ({ data, defaultSize }) => {
     return {
       all: data,
       size: defaultSize,
