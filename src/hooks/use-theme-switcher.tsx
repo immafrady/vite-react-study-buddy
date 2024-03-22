@@ -1,7 +1,6 @@
 import { styled, Switch, useMediaQuery, useTheme } from '@mui/material';
 import * as React from 'react';
 import { createTheme } from '@mui/material/styles';
-import { DarkMode, DarkModeRounded, LightMode } from '@mui/icons-material';
 import { useMemo } from 'react';
 
 export const useThemeSwitcher = () => {
@@ -10,6 +9,7 @@ export const useThemeSwitcher = () => {
   const theme = React.useMemo(() => createTheme({  palette: { mode }}), [mode]);
 
   return {
+    mode,
     theme,
     contextValue: {
       toggleColorMode: () => {
