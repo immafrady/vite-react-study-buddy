@@ -25,6 +25,16 @@ export class Record implements IRecord {
     }
   }
 
+  get score() {
+    const doneCount = this.questionIds.length
+    const rightCount = doneCount - this.wrongQuestionIds.length
+    if (doneCount > 0) {
+      return Math.floor(rightCount / doneCount * 100)
+    } else {
+      return 0
+    }
+  }
+
   loadQuestions() {
     // todo 加载问题
   }
