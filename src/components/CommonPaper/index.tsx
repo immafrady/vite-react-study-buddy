@@ -3,17 +3,17 @@ import React from 'react'
 
 const CommonPaper: React.FC<{
   sx?: SxProps<Theme>
-  ref?: React.Ref<HTMLDivElement>
   title: string
   subtitle?: string
   children?: React.ReactNode
-}> = ({ title, subtitle, children, ref, sx = {} }) => {
-  return <Paper ref={ref} sx={{ p: { xs: 1, sm: 2, md: 3, lg: 4, xl: 5 }, minWidth: 'sm', ...sx }}>
+  ref?: React.ForwardedRef<HTMLDivElement>
+}> = React.forwardRef(({ title, subtitle, children, sx = {} }, ref: React.ForwardedRef<HTMLDivElement>) => {
+  return <Paper ref={ref} component={'div'} sx={{ p: { xs: 1, sm: 2, md: 3, lg: 4, xl: 5 }, minWidth: 'sm', ...sx }}>
     <Typography variant={'h5'}>{title}</Typography>
     {subtitle && <Typography variant={'body2'} color={'text.secondary'}>{subtitle}</Typography>}
-    <Divider sx={{ marginTop: { xs: 1, sm: 2, md: 3, lg: 4, xl: 5 }, marginBottom: { xs: 4, sm: 5, md: 6, lg: 7, xl: 8 } }}/>
+    <Divider sx={{ marginTop: { xs: 1, sm: 2, md: 3, lg: 4, xl: 5 }, marginBottom: { xs: 2, sm: 5 } }}/>
     {children}
   </Paper>
-}
+})
 
 export default CommonPaper
