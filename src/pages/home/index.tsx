@@ -12,10 +12,18 @@ import { useNavigate } from 'react-router-dom'
 import { RouterName } from '@/router/types'
 import { ExamConfigState } from '@/pages/exam-config/types'
 import { ExamType } from '@/services/exam-service/types'
-import { EmojiEmotions, Favorite, HistoryEdu, Settings, SportsKabaddi, Visibility } from '@mui/icons-material'
+import {
+  EmojiEmotions,
+  Favorite,
+  HistoryEdu,
+  RateReview,
+  Settings,
+  SportsKabaddi,
+} from '@mui/icons-material'
 import React from 'react'
 import CommonPaper from '@/components/CommonPaper'
 import { blueGrey, deepPurple, green, grey, orange, red } from '@mui/material/colors'
+import Box from '@mui/material/Box'
 
 const Home = () => {
   const theme = useTheme()
@@ -52,7 +60,7 @@ const Home = () => {
   }, {
     title: '复习模式',
     desc: '查漏补缺',
-    icon: Visibility,
+    icon: RateReview,
     color: green[400],
     action: () => {
 
@@ -72,7 +80,7 @@ const Home = () => {
     icon: HistoryEdu,
     color: blueGrey[500],
     action: () => {
-
+      navigate(RouterName.RecordList)
     }
   }, {
     title: '设置',
@@ -84,35 +92,36 @@ const Home = () => {
   }]
 
 
-  return <CommonPaper title={'欢迎访问学习伙伴'} subtitle={'陪你做做题～'}>
-    <List disablePadding>
-      <ListSubheader>请选择你的模式</ListSubheader>
-      { modeList.map((item, idx) => <>
-        <ListItem key={idx} disableGutters>
-          <ListItemButton onClick={item.action}>
-            <ListItemAvatar><Avatar sx={{ bgcolor: isLightTheme ? item.color : '' }}>
-              { React.createElement(item.icon) }
-            </Avatar></ListItemAvatar>
-            <ListItemText primary={item.title} secondary={item.desc} />
-          </ListItemButton>
-        </ListItem>
-        { idx !== modeList.length - 1 && <Divider variant={'middle'} component="li" /> }
-      </>) }
-      <ListSubheader>其他</ListSubheader>
-      { otherList.map((item, idx) => <>
-        <ListItem disableGutters>
-          <ListItemButton onClick={item.action}>
-            <ListItemAvatar><Avatar sx={{ bgcolor: isLightTheme ? item.color : '' }}>
-              { React.createElement(item.icon) }
-            </Avatar>
-            </ListItemAvatar>
-            <ListItemText primary={item.title}></ListItemText>
-          </ListItemButton>
-        </ListItem>
-        { idx !== otherList.length - 1 && <Divider variant={'middle'} component="li" /> }
-      </>) }
-
-    </List>
+  return <CommonPaper sx={{ display: 'flex', flexDirection: 'column', height: '100%' }} title={'欢迎访问学习伙伴'} subtitle={'陪你做做题～'}>
+    <Box sx={{ overflowY: 'auto', flex: 1 }}>
+      <List disablePadding>
+        <ListSubheader disableSticky>请选择你的模式</ListSubheader>
+        { modeList.map((item, idx) => <>
+          <ListItem key={idx} disableGutters>
+            <ListItemButton onClick={item.action}>
+              <ListItemAvatar><Avatar sx={{ bgcolor: isLightTheme ? item.color : '' }}>
+                { React.createElement(item.icon) }
+              </Avatar></ListItemAvatar>
+              <ListItemText primary={item.title} secondary={item.desc} />
+            </ListItemButton>
+          </ListItem>
+          { idx !== modeList.length - 1 && <Divider variant={'middle'} component="li" /> }
+        </>) }
+        <ListSubheader disableSticky>其他</ListSubheader>
+        { otherList.map((item, idx) => <>
+          <ListItem disableGutters>
+            <ListItemButton onClick={item.action}>
+              <ListItemAvatar><Avatar sx={{ bgcolor: isLightTheme ? item.color : '' }}>
+                { React.createElement(item.icon) }
+              </Avatar>
+              </ListItemAvatar>
+              <ListItemText primary={item.title}></ListItemText>
+            </ListItemButton>
+          </ListItem>
+          { idx !== otherList.length - 1 && <Divider variant={'middle'} component="li" /> }
+        </>) }
+      </List>
+    </Box>
   </CommonPaper>
 }
 
